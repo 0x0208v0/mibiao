@@ -1,0 +1,64 @@
+{% extends 'frame/base.html' %}
+
+
+{% block styles %}
+  {{ super() }}
+  <style>
+      .tag {
+          text-decoration: none;
+          background: #fbfbfb;
+          border: none;
+          border-radius: 2px;
+          bottom: 8px;
+          box-shadow: 0 0 2px rgba(0, 0, 0, .5);
+          color: unset;
+          height: 20px;
+          line-height: 20px;
+          padding: 0 4px;
+          position: absolute;
+          right: 13px;
+      }
+
+      .app {
+          background-color: #fff;
+          border-radius: 1rem;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, .24);
+          box-sizing: border-box;
+          margin-bottom: 20px;
+          margin-top: 15px;
+          padding: 25px 30px;
+          transition: background-color .5s
+      }
+  </style>
+
+{% endblock %}
+
+{% block container %}
+
+  <div class="app">
+
+    <ul class="list-group list-group-flush">
+      {% for domain in domain_list %}
+        <li class="list-group-item">
+
+          <div class="text-break" style="font-size: 14px; font-weight: 700;">
+            <a href="{{ domain.url or '.' }}" style="color: #555; text-decoration: none;">
+              {{ domain.domain }}
+            </a>
+          </div>
+
+          <div class="text-break" style="font-size: 12px;">{{ domain.description }}</div>
+
+        </li>
+      {% endfor %}
+    </ul>
+
+  </div>
+
+
+{% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+{% endblock %}

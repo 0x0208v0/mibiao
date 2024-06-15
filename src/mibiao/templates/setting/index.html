@@ -1,0 +1,17 @@
+{% extends 'frame/base.html' %}
+
+
+{% block container %}
+  <div>
+
+    <div>
+      <a href="{{ url_for('domain.list') }}">管理域名</a>
+    </div>
+
+  </div>
+{% endblock %}
+
+
+{% block scripts %}
+  {{ super() }}
+{% endblock %}

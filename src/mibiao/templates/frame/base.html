@@ -11,7 +11,7 @@
 
 
 {% block title %}
-  NodeSeek(Lite)
+  DomainSeek (beta)
 {% endblock %}
 
 
@@ -38,6 +38,9 @@
           color: #555;
       }
 
+      a:hover {
+          color: #333;
+      }
 
       .header {
           background-color: #fff;
@@ -46,6 +49,7 @@
       }
 
       .navbar {
+          padding: 0;
           display: flex;
           width: 1080px;
           margin: auto;
@@ -53,7 +57,6 @@
       }
 
       .navbar .brand {
-
           display: flex;
           align-items: center;
           color: #555;
@@ -75,7 +78,7 @@
           font-size: 11px;
           font-weight: 400;
           position: relative;
-          top: -14px;
+          top: -12px;
       }
 
   </style>
@@ -83,13 +86,21 @@
 
 {% block content %}
   <header class="header">
-    <nav class="navbar">
-      <a href="https://www.nodeseek.com/" class="brand">
+    <div class="navbar">
+      <a href="/" class="brand">
         <img class="debug logo" src="https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png">
-        <span class="debug title">NodeSeek</span>
+        <span class="debug title">DomainSeek</span>
         <span class="debug beta">beta</span>
       </a>
-    </nav>
+
+
+      <a href="{{ url_for('setting.index') }}">
+        <img src="{{ url_for('static', filename='setting-two.svg') }}"
+             width="21" height="21" alt="icon"
+        />
+      </a>
+    </div>
+
 
   </header>
 
@@ -98,22 +109,6 @@
     {% block app %}
 
       <div class="container-fluid" style="max-width: 666px;">
-        <nav class="navbar bg-body-tertiary mb-4" style="background-color: #fff;">
-          <div class="container-fluid">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">
-              <img src="{{ url_for('static', filename='android-chrome-192x192.png') }}"
-                   width="21" height="21" alt="icon"
-              />
-              <span>NodeSeek Lite</span>
-            </a>
-            <a href="{{ url_for('setting.index') }}">
-              <img src="{{ url_for('static', filename='setting-two.svg') }}"
-                   width="21" height="21" alt="icon"
-              />
-            </a>
-          </div>
-        </nav>
-
         {% block container %}
         {% endblock %}
       </div>

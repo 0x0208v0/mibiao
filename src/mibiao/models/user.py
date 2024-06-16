@@ -18,15 +18,31 @@ class User(BaseModel, UserMixin):
         index=True,
         nullable=False,
     )
+
     password_hash: Mapped[str] = mapped_column(
         String(256),
         nullable=False,
     )
+
     is_active: Mapped[bool] = mapped_column(
         Boolean,
         nullable=False,
         default=True,
         server_default='1',
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(64),
+        unique=True,
+        index=True,
+        nullable=False,
+    )
+
+    avatar_url: Mapped[str] = mapped_column(
+        String(256),
+        unique=True,
+        index=True,
+        nullable=False,
     )
 
     @property

@@ -1,4 +1,4 @@
-{% extends 'frame/base.html' %}
+{% extends 'base.html' %}
 
 
 {% block styles %}
@@ -19,46 +19,41 @@
           right: 13px;
       }
 
-      .app {
+      .domain-list {
           background-color: #fff;
           border-radius: 1rem;
           box-shadow: 0 3px 8px rgba(0, 0, 0, .24);
           box-sizing: border-box;
-          margin-bottom: 20px;
-          margin-top: 15px;
           padding: 25px 30px;
-          transition: background-color .5s
+          transition: background-color .5s;
+          margin: 20px 0 15px 0;
+      }
+
+      .domain-list-item {
+          border-bottom: 1px solid #dee2e6;
+          padding: 8px 16px;
+          min-height: 58px;
       }
   </style>
 
 {% endblock %}
 
-{% block container %}
-
-  <div class="app">
-
-    <ul class="list-group list-group-flush">
+{% block content %}
+  <div class="domain-list">
+    <ul class="flex flex-col p-0">
       {% for domain in domain_list %}
-        <li class="list-group-item">
-
-          <div class="text-break" style="font-size: 14px; font-weight: 700;">
-            <a href="{{ domain.url or '.' }}" style="color: #555; text-decoration: none;">
-              {{ domain.domain }}
-            </a>
+        <li class="domain-list-item text-pretty hover:text-balance">
+          <div class="text-[14px] font-[700] text-[#555]">
+            <a href="{{ domain.url or '' }}">{{ domain.domain }}</a>
           </div>
-
-          <div class="text-break" style="font-size: 12px;">{{ domain.description }}</div>
-
+          <div class="text-[12px] text-[#858585] border-gray-300">
+            {{ domain.description or '' }}
+          </div>
         </li>
       {% endfor %}
     </ul>
-
+    <div class="h-[20px]"></div>
   </div>
-
-
 {% endblock %}
 
 
-{% block scripts %}
-  {{ super() }}
-{% endblock %}

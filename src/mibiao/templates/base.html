@@ -1,0 +1,132 @@
+<!doctype html>
+<html{% block html_attribs %}{% endblock %}>
+{% block html %}
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              clifford: '#da373d',
+            }
+          }
+        }
+      }
+    </script>
+
+    {% block google_tag %}
+    {% endblock %}
+
+    <!--
+        图标:
+        https://www.svgrepo.com/
+        https://iconpark.oceanengine.com/official
+    -->
+    <link rel="icon" href="{% block icon %}{{ url_for('static', filename='favicon-32x32.png') }}{% endblock %}">
+
+    <title>{% block title %}米表{% endblock %}</title>
+
+    {% block styles %}
+      <style>
+          html {
+              font-family: sans-serif;
+              line-height: 1.15;
+              -webkit-text-size-adjust: 100%;
+          }
+
+          body {
+              margin: 0;
+              background-image: linear-gradient(#d4d4d4 1px, transparent 0), linear-gradient(90deg, #d4d4d4 1px, transparent 0);
+              background-size: 32px 32px;
+              background-color: #fffcf8;
+          }
+
+          a {
+              text-decoration: none;
+              color: #555;
+          }
+
+          a:hover {
+              color: #333;
+          }
+
+          .header {
+              background-color: #fff;
+              box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+              transition: background-color .5s;
+          }
+
+          .navbar {
+              padding: 0;
+              display: flex;
+              width: 1080px;
+              margin: auto;
+              height: 40px;
+          }
+
+          .navbar .brand {
+              display: flex;
+              align-items: center;
+              color: #555;
+          }
+
+          .brand .logo {
+              max-width: 36px;
+          }
+
+          .brand .title {
+              margin-left: 5px;
+              font-family: helvetica neue, helvetica, arial, sans-serif;
+              font-size: 24px;
+              font-weight: 700;
+          }
+
+          .beta {
+              color: #ccc;
+              font-size: 11px;
+              font-weight: 400;
+              position: relative;
+              top: -12px;
+          }
+      </style>
+    {% endblock styles %}
+  </head>
+
+  <body{% block body_attribs %}{% endblock %}>
+  {% block body %}
+
+    <header class="header">
+      <div class="navbar flex items-center justify-between w-full px-4 py-2 max-w-[888px]">
+        <a href="/" class="brand">
+          <img class="debug logo" src="https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png">
+          <span class="debug title">DomainSeek</span>
+          <span class="debug beta">beta</span>
+        </a>
+        <a href="{{ url_for('setting.index') }}">
+          <img src="{{ url_for('static', filename='setting-two.svg') }}" width="21" height="21" alt="icon"/>
+        </a>
+      </div>
+    </header>
+
+    <main class="flex flex-col justify-center items-center">
+      <div class="w-full max-w-[666px] mt-[20px]">
+        {% block content %}
+        {% endblock content %}
+      </div>
+    </main>
+
+    <footer>
+      {% block footer %}
+      {% endblock %}
+    </footer>
+
+    {% block scripts %}
+    {% endblock scripts %}
+
+  {% endblock body %}
+  </body>
+{% endblock html %}
+</html>

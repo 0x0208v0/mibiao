@@ -2,7 +2,6 @@ import logging
 import os
 import pathlib
 import secrets
-import uuid
 
 from filelock import FileLock
 from flask import Flask
@@ -18,7 +17,7 @@ logging.basicConfig(format=config.LOGGING_FORMAT, level=config.LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__, instance_path=os.getcwd())
-app.config.update(config.model_dump())
+app.config.update(config.to_dict())
 
 app.json.ensure_ascii = False
 app.json.mimetype = "application/json; charset=utf-8"
@@ -29,7 +28,7 @@ login_manager.login_message = '访问该页面需要先登陆'
 
 
 @login_manager.user_loader
-def load_user(user_id: uuid.UUID):
+def load_user(user_id: str):
     return User.get(user_id)
 
 

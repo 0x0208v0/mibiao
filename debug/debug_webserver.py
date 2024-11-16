@@ -9,7 +9,7 @@ def create_test_data():
         db.drop_all()
         db.create_all()
 
-        user = User(email='a@a.com')
+        user = User(email='a@a.com', name='a', avatar_url='https://www.nodeseek.com/avatar/15068.png')
         user.password = 'a'
         db.session.add(user)
         db.session.flush()
@@ -37,5 +37,10 @@ def create_test_data():
 
 if __name__ == '__main__':
     # 如果需要测试数据，可以解除 create_test_data() 注释
-    # create_test_data()
-    app.run(debug=True, threaded=False, host='localhost', port=15000)
+    create_test_data()
+    app.run(
+        debug=True,
+        threaded=False,
+        host='localhost',
+        port=15000,
+    )

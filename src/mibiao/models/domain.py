@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import Boolean
 from sqlalchemy import Integer
 from sqlalchemy import String
@@ -8,15 +6,14 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from mibiao.models.base import BaseModel
-from mibiao.models.base import UUID
 
 
 class Domain(BaseModel):
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(),
+    user_id: Mapped[int] = mapped_column(
+        Integer,
         nullable=False,
     )
-
+    
     domain: Mapped[str] = mapped_column(
         String(256),
         nullable=False,

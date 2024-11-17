@@ -21,8 +21,9 @@ blueprint = Blueprint('domain', __name__)
 @login_required
 def list():
     domain_list = Domain.get_list(
-        Domain.user_id == current_user.id,
-        order_by=[Domain.updated_at.desc()],
+        Domain.is_hide != False,
+        order_by=[Domain.rank, Domain.id.desc()],
+        user=current_user,
     )
     return render_template(
         'domain/list.html',
@@ -112,7 +113,10 @@ def delete(id: str):
 @blueprint.get('/api/domains')
 @login_required
 def get_domain_list():
-    domain_list = Domain.get_list(user=current_user, order_by=[Domain.rank, Domain.id.desc()])
+    domain_list = Domain.get_list(
+        order_by=[Domain.is_hide, Domain.rank, Domain.id.desc()],
+        user=current_user,
+    )
     return {'domain_list': [domain.to_dict() for domain in domain_list]}
 
 

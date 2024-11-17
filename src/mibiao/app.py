@@ -7,12 +7,14 @@ from filelock import FileLock
 from flask import Flask
 from flask_compress import Compress
 from flask_login import LoginManager
+from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import HTTPException
 
 from mibiao.blueprints import register_blueprints
 from mibiao.models import db
 from mibiao.models import register_models
+from mibiao.models.config import load_config_by_user
 from mibiao.models.user import User
 from mibiao.settings import settings
 
@@ -33,13 +35,8 @@ login_manager.login_message = '访问该页面需要先登陆'
 
 
 @login_manager.user_loader
-def load_user(user_id: str):
-    return User.get(user_id)
-
-
-@login_manager.user_loader
 def load_user(user_id: int):
-    return db.session.get(User, user_id)
+    return User.get(user_id)
 
 
 @app.errorhandler(IntegrityError)
@@ -51,6 +48,12 @@ def handle_validation_error(error):
 
 register_models(app)
 register_blueprints(app)
+
+
+@app.context_processor
+def inject_user_config():
+    return dict(config=load_config_by_user(current_user))
+
 
 with app.app_context():
     db.create_all()

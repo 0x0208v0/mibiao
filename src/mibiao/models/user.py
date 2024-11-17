@@ -6,10 +6,15 @@ from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-from werkzeug.security import check_password_hash
-from werkzeug.security import generate_password_hash
 
 from mibiao.models.base import BaseModel
+from mibiao.utils.password import check_password_hash
+from mibiao.utils.password import generate_password_hash
+
+
+# 用 werkzeug 的 check_password_hash 会突然增加30MB内存占用？？
+# from werkzeug.security import check_password_hash
+# from werkzeug.security import generate_password_hash
 
 
 class User(BaseModel, LoginUserMixin):
@@ -78,12 +83,10 @@ class User(BaseModel, LoginUserMixin):
     @classmethod
     def login(cls, email: str, password: str) -> Self:
         email = (email or '').strip()
-        if not email:
-            raise ValueError('邮箱不能为空')
+        cls.validate_email(email)
 
         password = (password or '').strip()
-        if not password:
-            raise ValueError('密码不能为空')
+        cls.validate_password(password)
 
         user = cls.get_by_email(email)
         if user is None or not user.is_active or not user.verify_password(password):

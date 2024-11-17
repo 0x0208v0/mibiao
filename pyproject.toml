@@ -24,6 +24,8 @@ dependencies = [
     'gevent==24.11.1',
     'gunicorn==23.0.0',
     'filelock==3.16.1',
+    'passlib[bcrypt]==1.7.4',
+    'bcrypt==4.2.0',
 ]
 [project.scripts]
 mibiao = 'mibiao.cli:cli'

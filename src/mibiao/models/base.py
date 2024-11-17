@@ -218,6 +218,10 @@ db = SQLAlchemy(
         'pool_size': 2,
         'pool_recycle': 10,
         'pool_pre_ping': True,
+
+        # SQLAlchemy Memory Leak: https://github.com/sqlalchemy/sqlalchemy/discussions/6573
+        # Potential memory leak? https://github.com/sqlalchemy/sqlalchemy/discussions/9726
+        'query_cache_size': 0,
     },
     session_options={
         'autocommit': False,

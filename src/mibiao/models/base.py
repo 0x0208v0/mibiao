@@ -78,9 +78,8 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     def update(self, data: dict, commit: bool = True):
         for k, v in data.items():
-            if not hasattr(self, k):
-                raise AttributeError(f'{self} not found `{k}`')
-            setattr(self, k, v)
+            if hasattr(self, k) and k not in {'id', 'created_at', 'updated_at', 'user_id'}:
+                setattr(self, k, v)
         db.session.add(self)
         db.session.flush([self])
         if commit:

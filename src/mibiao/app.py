@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import os
 import pathlib
@@ -7,7 +9,6 @@ from filelock import FileLock
 from flask import Flask
 from flask_compress import Compress
 from flask_login import LoginManager
-from flask_login import current_user
 from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import HTTPException
 
@@ -52,7 +53,7 @@ register_blueprints(app)
 
 @app.context_processor
 def inject_user_config():
-    return dict(config=load_config_by_user(current_user))
+    return dict(config=load_config_by_user(User.get_one()))
 
 
 with app.app_context():

@@ -17,6 +17,8 @@ dependencies = [
     'SQLAlchemy-Utils==0.41.2',
     'Flask-SQLAlchemy==3.1.1',
     'Flask-Login==0.6.3',
+    'Flask-Compress==1.17.0',
+    'pendulum==3.0.0',
     'python-dotenv==1.0.1',
     'gevent==24.11.1',
     'gunicorn==23.0.0',

@@ -118,6 +118,10 @@ class UserMixin:
         nullable=False,
     )
 
+    def verify_owner(self, user: User):
+        if self.user_id != user.id:
+            raise ValueError(f'没有权限操作资源 `{self}`')
+
 
 def get_user_id(user_or_id: User | int) -> int:
     return user_or_id if isinstance(user_or_id, int) else user_or_id.id

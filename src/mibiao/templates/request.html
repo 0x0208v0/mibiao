@@ -80,6 +80,10 @@
     return await sendHttpRequest('PUT', url, data, options);
   }
 
+  async function sendHttpDelete(url, data, options) {
+    return await sendHttpRequest('DELETE', url, data, options);
+  }
+
   async function sendHttpForm(url, formData, options) {
     return await sendHttpRequest('POST', url, formData, options);
   }

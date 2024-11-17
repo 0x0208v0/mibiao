@@ -120,22 +120,22 @@
     })
   </script>
 
-
   <script>
     const routes = [
       {path: '/', redirect: '/site'},
     ];
   </script>
 
+  <script>
+    const {ref, reactive, computed, watch, onMounted, createApp} = Vue;
+    const {useRoute, useRouter, onBeforeRouteUpdate, createRouter, createWebHashHistory} = VueRouter;
+    const {createPinia} = Pinia;
+  </script>
+
   {% include 'admin/site.html' %}
   {% include 'admin/domain.html' %}
 
-
   <script>
-    const {ref, computed, watch} = Vue;
-    const {useRoute, useRouter, onBeforeRouteUpdate} = VueRouter;
-
-
     const App = {
       delimiters: ["@{", "}"],
       components: {},
@@ -181,12 +181,7 @@
     }
   </script>
 
-
   <script>
-    const {createPinia} = Pinia;
-    const {createApp} = Vue;
-    const {createRouter, createWebHashHistory} = VueRouter;
-
     const app = createApp(App);
     const router = createRouter({
       history: createWebHashHistory(),
@@ -207,4 +202,5 @@
 
     app.mount('#app');
   </script>
+
 {% endblock scripts %}

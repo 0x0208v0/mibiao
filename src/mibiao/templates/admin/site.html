@@ -35,20 +35,17 @@
 </script>
 
 <script>
-  const {reactive, onMounted} = Vue;
-
-  const form = reactive({
-    site_title: '',
-    site_icon_url: '',
-    site_brand: '',
-    site_beta: '',
-    site_copyright: '',
-  })
-
   const site_component = {
     template: `#site`,
     delimiters: ["@{", "}"],
     setup() {
+      const form = reactive({
+        site_title: '',
+        site_icon_url: '',
+        site_brand: '',
+        site_beta: '',
+        site_copyright: '',
+      })
 
       onMounted(async () => {
         const response = await getConfig();

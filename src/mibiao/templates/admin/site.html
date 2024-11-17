@@ -1,0 +1,21 @@
+<script id="site" type="text/x-template">
+  <div>
+    米站管理
+  </div>
+
+</script>
+
+<script>
+  const site_component = {
+    delimiters: ["@{", "}"],
+    setup() {
+    },
+    template: `#site`,
+  };
+  routes.push({
+    path: '/site',
+    name: 'site',
+    title: '站点信息',
+    component: site_component
+  });
+</script>

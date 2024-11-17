@@ -1,0 +1,21 @@
+<script id="domain" type="text/x-template">
+  <div>
+    域名管理
+  </div>
+
+</script>
+
+<script>
+  const domain_component = {
+    delimiters: ["@{", "}"],
+    setup() {
+    },
+    template: `#domain`,
+  };
+  routes.push({
+    path: '/domain',
+    name: 'domain',
+    title: '域名管理',
+    component: domain_component
+  });
+</script>

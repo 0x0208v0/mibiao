@@ -61,9 +61,3 @@ def delete():
     current_user.delete()
     flash('账户已删除', 'success')
     return redirect(url_for('main.index'))
-
-
-@blueprint.route('/setting', methods=['GET', 'POST'])
-@login_required
-def setting():
-    return render_template('user/setting.html')

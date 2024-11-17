@@ -8,16 +8,16 @@ from flask import Flask
 from flask_login import LoginManager
 
 from mibiao.blueprints import register_blueprints
-from mibiao.config import config
 from mibiao.models import db
 from mibiao.models import register_models
 from mibiao.models.user import User
+from mibiao.settings import settings
 
-logging.basicConfig(format=config.LOGGING_FORMAT, level=config.LOGGING_LEVEL)
+logging.basicConfig(format=settings.LOGGING_FORMAT, level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
 
 app = Flask(__name__, instance_path=os.getcwd())
-app.config.update(config.to_dict())
+app.config.update(settings.to_dict())
 
 app.json.ensure_ascii = False
 app.json.mimetype = "application/json; charset=utf-8"

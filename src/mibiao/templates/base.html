@@ -105,14 +105,14 @@
           <span class="debug title">DomainSeek</span>
           <span class="debug beta">beta</span>
         </a>
-        <a href="{{ url_for('setting.index') }}">
+        <a href="{{ url_for('admin.index') }}">
           <img src="{{ url_for('static', filename='setting-two.svg') }}" width="21" height="21" alt="icon"/>
         </a>
       </div>
     </header>
 
     <main class="flex flex-col justify-center items-center">
-      <div class="w-full max-w-[666px] mt-[20px]">
+      <div class="w-full max-w-[850px] mt-[20px]">
         {% block content %}
         {% endblock content %}
       </div>

@@ -2,16 +2,19 @@
 
 
 {% block content %}
-  <div>
-
-    <div>
-      <a href="{{ url_for('domain.list') }}">管理域名</a>
-    </div>
-
-    <div id="app">
-      <span>@{counter.value}</span>
-      <el-button type="primary" @click="handleClick">你好</el-button>
-    </div>
+  <div id="app" class="flex">
+    <el-container>
+      <el-aside width="200px">
+        <el-menu :default-active="activeIndex" @select="handleSelect" router>
+          <el-menu-item v-for="(item, index) in routes.slice(1)" :index="item.path" :route="{name: item.name}">
+            @{item.title}
+          </el-menu-item>
+        </el-menu>
+      </el-aside>
+      <el-main>
+        <router-view></router-view>
+      </el-main>
+    </el-container>
   </div>
 {% endblock %}
 
@@ -24,10 +27,12 @@
         integrity="sha512-r5oxEDAlj7jwk5RhxKxszBFjYQPOitY2sq8s+W4qxcgB8CZYafomy+TBHEC1L4jSQQAGkUzJlMgA2jv0T1sNgA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"
   />
+
   <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/theme-chalk/index.min.css"
         integrity="sha512-r5oxEDAlj7jwk5RhxKxszBFjYQPOitY2sq8s+W4qxcgB8CZYafomy+TBHEC1L4jSQQAGkUzJlMgA2jv0T1sNgA=="
         crossorigin="anonymous" referrerpolicy="no-referrer"
   />
+
   <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/theme-chalk/el-icon.min.css"
         integrity="sha512-EPjt77BiTdoqWPIYJRZpB5NX+mv6TMQYMyNs/dQSLvlzL0VHYSnJv00tNysRSDo70Auaw4jmgEM84TdahCVwsw=="
         crossorigin="anonymous" referrerpolicy="no-referrer"
@@ -95,91 +100,7 @@
   >
   </script>
 
-  <script>
-    const {ElMessage} = ElementPlus
-
-    async function checkResponseDataOkOrError(status, data) {
-      if (data && data.err && status !== 401) {
-        ElMessage.error(data.err.msg);
-        return false;
-      }
-      return true;
-    }
-
-    async function checkResponseStatusOkOrError(status) {
-      switch (status) {
-        case 400:
-          ElMessage.error('参数错误');
-          return false;
-        case 401:
-          ElMessage.error('请重新登陆');
-          return false;
-        case 403:
-          ElMessage.error('服务器拒绝访问');
-          return false;
-        case 404:
-          ElMessage.error('请求地址错误');
-          return false;
-        case 500:
-          ElMessage.error('服务器故障');
-          return false;
-        default:
-          ElMessage.error('网络连接故障');
-          return false;
-      }
-    }
-
-    function getToken() {
-      return 'hello world';
-    }
-
-    async function sendHttpRequest(method, url, data, options) {
-      const headers = {
-        Authorization: `Bearer ${getToken()}`,
-      };
-
-      const defaultOptions = {
-        method,
-        headers,
-        async onRequest({request, options}) {
-        },
-        async onRequestError({request, options, error}) {
-          ElMessage.error('Http请求出错，请重试！');
-        },
-        async onResponse({request, response, options}) {
-        },
-        async onResponseError({request, options, response}) {
-          if (!(await checkResponseDataOkOrError(response.status, response.data))) {
-            return;
-          }
-          await checkResponseStatusOkOrError(response.status);
-        },
-      };
-      if (method === 'GET') {
-        defaultOptions.query = data || {};
-      } else {
-        defaultOptions.body = data || {};
-      }
-      const finalOptions = _.merge(defaultOptions, options || {});
-      return await fetch(url, finalOptions);
-    }
-
-    async function sendHttpGet(url, data, options) {
-      return await sendHttpRequest('GET', url, data, options);
-    }
-
-    async function sendHttpPost(url, data, options) {
-      return await sendHttpRequest('POST', url, data, options);
-    }
-
-    async function sendHttpPut(url, data, options) {
-      return await sendHttpRequest('PUT', url, data, options);
-    }
-
-    async function sendHttpForm(url, formData, options) {
-      return await sendHttpRequest('POST', url, formData, options);
-    }
-  </script>
+  {% include 'request.html' %}
 
   <script>
     const {defineStore} = Pinia;
@@ -199,23 +120,67 @@
     })
   </script>
 
+
   <script>
-    const {ref, computed} = Vue;
+    const routes = [
+      {path: '/', redirect: '/site'},
+    ];
+  </script>
+
+  {% include 'admin/site.html' %}
+  {% include 'admin/domain.html' %}
+
+
+  <script>
+    const {ref, computed, watch} = Vue;
+    const {useRoute, useRouter, onBeforeRouteUpdate} = VueRouter;
+
+
     const App = {
       delimiters: ["@{", "}"],
       components: {},
       setup() {
         const counter = useCounterStore();
+        const activeIndex = ref('/site');
+        const route = useRoute();
+        const router = useRouter();
+
+        watch(
+            () => router.currentRoute,
+            (val) => {
+              console.log('watch', val.value);
+            },
+            {
+              immediate: true,
+              deep: true,
+            }
+        );
+
+
+        onBeforeRouteUpdate(async (to, from) => {
+          console.log('onBeforeRouteUpdate', to, from);
+        })
 
         function handleClick() {
           counter.increment();
           console.log(counter.value);
         }
 
-        return {counter, handleClick}
+        function handleSelect(index) {
+          console.log('handleSelect', index);
+          activeIndex.value = index;
+        }
+
+        return {
+          routes,
+          activeIndex,
+          handleClick,
+          handleSelect,
+        }
       },
     }
   </script>
+
 
   <script>
     const {createPinia} = Pinia;
@@ -225,16 +190,21 @@
     const app = createApp(App);
     const router = createRouter({
       history: createWebHashHistory(),
-      routes: [],
+      routes: routes,
     });
+    router.beforeEach((to, from) => {
+      console.log('beforeEach', to, from);
+      return true
+    })
     const pinia = createPinia();
 
+    app.use(router);
     app.use(pinia);
     app.use(ElementPlus);
     for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
       app.component(key, component);
     }
-    app.mount('#app');
 
+    app.mount('#app');
   </script>
 {% endblock scripts %}

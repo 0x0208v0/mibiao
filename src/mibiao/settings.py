@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 
 @dataclass
-class Config:
+class Settings:
     LOGGING_LEVEL: str
     LOGGING_FORMAT: str
 
@@ -21,13 +21,13 @@ class Config:
         return {k: str(v) for k, v in asdict(self).items()}
 
 
-def load_config(env: str = '.env') -> Config | None:
+def load_settings(env: str = '.env') -> Settings | None:
     if not load_dotenv(env):
         warnings.warn(
             f'{env} not found, using default config, current working directory: {os.getcwd()}'
         )
 
-    return Config(
+    return Settings(
         LOGGING_LEVEL=os.environ.get('LOGGING_LEVEL', 'INFO'),
         LOGGING_FORMAT=os.environ.get(
             'LOGGING_FORMAT',
@@ -44,7 +44,7 @@ def load_config(env: str = '.env') -> Config | None:
     )
 
 
-config = load_config()
+settings = load_settings()
 
 if __name__ == '__main__':
-    print(config.SQLALCHEMY_DATABASE_URI)
+    print(settings.SQLALCHEMY_DATABASE_URI)

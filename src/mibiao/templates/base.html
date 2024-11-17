@@ -27,7 +27,7 @@
     -->
     <link rel="icon" href="{% block icon %}{{ url_for('static', filename='favicon-32x32.png') }}{% endblock %}">
 
-    <title>{% block title %}米表{% endblock %}</title>
+    <title>{% block title %}{{ config.site_title }}{% endblock %}</title>
 
     {% block styles %}
       <style>
@@ -101,9 +101,9 @@
     <header class="header">
       <div class="navbar flex items-center justify-between w-full px-4 py-2 max-w-[888px]">
         <a href="/" class="brand">
-          <img class="debug logo" src="https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png">
-          <span class="debug title">DomainSeek</span>
-          <span class="debug beta">beta</span>
+          <img class="debug logo" src="{{ config.site_icon_url }}">
+          <span class="debug title">{{ config.site_brand }}</span>
+          <span class="debug beta">{{ config.site_beta }}</span>
         </a>
         <a href="{{ url_for('admin.index') }}">
           <img src="{{ url_for('static', filename='setting-two.svg') }}" width="21" height="21" alt="icon"/>

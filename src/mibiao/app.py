@@ -5,7 +5,10 @@ import secrets
 
 from filelock import FileLock
 from flask import Flask
+from flask_compress import Compress
 from flask_login import LoginManager
+from sqlalchemy.exc import IntegrityError
+from werkzeug.exceptions import HTTPException
 
 from mibiao.blueprints import register_blueprints
 from mibiao.models import db
@@ -22,6 +25,8 @@ app.config.update(settings.to_dict())
 app.json.ensure_ascii = False
 app.json.mimetype = "application/json; charset=utf-8"
 
+Compress(app)
+
 login_manager = LoginManager(app)
 login_manager.login_view = 'user.login'
 login_manager.login_message = '访问该页面需要先登陆'
@@ -32,14 +37,20 @@ def load_user(user_id: str):
     return User.get(user_id)
 
 
-register_models(app)
-register_blueprints(app)
-
-
 @login_manager.user_loader
 def load_user(user_id: int):
     return db.session.get(User, user_id)
 
+
+@app.errorhandler(IntegrityError)
+@app.errorhandler(ValueError)
+@app.errorhandler(HTTPException)
+def handle_validation_error(error):
+    return {'err': {'msg': str(error)}}, 400
+
+
+register_models(app)
+register_blueprints(app)
 
 with app.app_context():
     db.create_all()

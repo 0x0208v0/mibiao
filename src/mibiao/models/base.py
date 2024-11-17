@@ -1,7 +1,12 @@
-import datetime
+from __future__ import annotations
+
+import json
+import uuid
 from datetime import datetime
 from typing import Self
+from typing import TYPE_CHECKING
 
+import pendulum
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 from sqlalchemy import Integer
@@ -10,7 +15,21 @@ from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import object_session
+from werkzeug.exceptions import NotFound
+
+if TYPE_CHECKING:
+    from mibiao.models.user import User
+
+
+class JsonEncoder(json.JSONEncoder):
+    def default(self, field):
+        if isinstance(field, uuid.UUID):
+            return str(field)
+        else:
+            return super().default(field)
 
 
 class SqlalchemyBaseModel(DeclarativeBase):
@@ -23,20 +42,45 @@ class SqlalchemyBaseModel(DeclarativeBase):
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
-        default=lambda: datetime.utcnow(),
+        default=lambda: pendulum.now('UTC'),
         server_default=func.current_timestamp(),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
-        default=lambda: datetime.utcnow(),
+        default=lambda: pendulum.now('UTC'),
         server_default=func.current_timestamp(),
-        onupdate=lambda: datetime.utcnow(),
+        onupdate=lambda: pendulum.now('UTC'),
         server_onupdate=func.current_timestamp(),
     )
 
-    def save(self, commit: bool = True):
+    def format_created_at(self, fmt='%Y-%m-%d %H:%M:%S', tz='UTC') -> str:
+        return pendulum.from_timestamp(self.created_at.timestamp(), tz).strftime(fmt)
+
+    def format_updated_at(self, fmt='%Y-%m-%d %H:%M:%S', tz='UTC') -> str:
+        return pendulum.from_timestamp(self.updated_at.timestamp(), tz).strftime(fmt)
+
+    @property
+    def session(self) -> Session:
+        return object_session(self)
+
+    @classmethod
+    def create(cls, data: dict, *, user: User | None = None, commit: bool = True) -> Self:
+        obj = cls(**data)
+        if user:
+            obj.user_id = user.id
+        db.session.add(obj)
+        db.session.flush()
+        if commit:
+            db.session.commit()
+        return obj
+
+    def update(self, data: dict, commit: bool = True):
+        for k, v in data.items():
+            if not hasattr(self, k):
+                raise AttributeError(f'{self} not found `{k}`')
+            setattr(self, k, v)
         db.session.add(self)
         db.session.flush([self])
         if commit:
@@ -44,9 +88,21 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     def delete(self, commit: bool = True):
         db.session.delete(self)
-        db.session.flush()
+        db.session.flush([self])
         if commit:
             db.session.commit()
+
+    def save(self, commit: bool = True):
+        db.session.add(self)
+        db.session.flush([self])
+        if commit:
+            db.session.commit()
+
+    def to_dict(self) -> dict:
+        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
+
+    def to_json(self, decoder_cls=None) -> str:
+        return json.dumps(self.to_dict(), cls=decoder_cls or JsonEncoder)
 
     @classmethod
     def get_obj_id(cls, obj_or_id: Self | int) -> int:
@@ -65,35 +121,56 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return db.session.get(cls, ident)
 
     @classmethod
-    def get_one(cls, *where) -> Self | None:
-        stmt = select(cls).where(*where)
-        result = db.session.execute(stmt)
+    def get_or_404(cls, ident) -> Self:
+        obj = cls.get(ident)
+        if obj is None:
+            raise NotFound(f'{cls.__name__} {ident} 不存在')
+        return obj
+
+    @classmethod
+    def get_one(cls, *where, user: User | None = None) -> Self | None:
+        extra_filters = []
+        if user:
+            extra_filters.append(cls.user_id == user.id)
+        query = select(cls).where(*where, *extra_filters)
+        result = db.session.execute(query)
         return result.scalar_one_or_none()
 
     @classmethod
-    def build_stmt(
+    def get_one_or_404(cls, *where, user: User | None = None) -> Self:
+        obj = cls.get_one(*where, user=user)
+        if obj is None:
+            raise NotFound(f'{cls.__name__} 不存在')
+        return obj
+
+    @classmethod
+    def build_query(
             cls,
             *where,
             order_by: list | None = None,
             offset: int | None = None,
             limit: int | None = None,
+            user: User | None = None,
     ) -> Select:
-        stmt = select(cls)
+        query = select(cls)
+        extra_filters = []
+        if user:
+            extra_filters.append(cls.user_id == user.id)
         if where:
-            stmt = stmt.where(*where)
+            query = query.where(*where, *extra_filters)
         if order_by:
-            stmt = stmt.order_by(*order_by)
+            query = query.order_by(*order_by)
         if offset is not None:
-            stmt = stmt.offset(offset)
+            query = query.offset(offset)
         if limit is not None:
-            stmt = stmt.limit(limit)
-        return stmt
+            query = query.limit(limit)
+        return query
 
     @classmethod
-    def count(cls, *where) -> int:
-        subquery = cls.build_stmt(*where).subquery()
-        stmt = select(func.count(subquery.c.id).label('cnt'))
-        result = db.session.execute(stmt)
+    def count(cls, *where, user: User | None = None) -> int:
+        subquery = cls.build_query(*where, user=user).subquery()
+        query = select(func.count(subquery.c.id).label('count'))
+        result = db.session.execute(query)
         for (cnt,) in result:
             return cnt
 
@@ -104,9 +181,16 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by: list | None = None,
             offset: int | None = None,
             limit: int | None = None,
+            user: User | None = None,
     ) -> list[Self]:
-        stmt = cls.build_stmt(*where, order_by=order_by, offset=offset, limit=limit)
-        result = db.session.execute(stmt).scalars()
+        query = cls.build_query(
+            *where,
+            order_by=order_by,
+            offset=offset,
+            limit=limit,
+            user=user,
+        )
+        result = db.session.execute(query).scalars()
         return list(result)
 
     @classmethod
@@ -116,28 +200,26 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by: list | None = None,
             page_num: int = 1,
             page_size: int = 20,
+            user: User | None = None,
     ) -> list[Self]:
         if not order_by:
-            order_by = [cls.created_at.desc(), cls.id.desc()]
+            order_by = [cls.id]
         return cls.get_list(
             *where,
             order_by=order_by,
             offset=(page_num - 1) * page_size,
             limit=page_size,
+            user=user,
         )
-
-    @classmethod
-    def get_id_name_list(cls, *where, order_by: list | None = None) -> list:
-        subquery = cls.build_stmt(*where, order_by=order_by).subquery()
-        stmt = select(subquery.c.id, subquery.c.name)
-        result = db.session.execute(stmt)
-        id_list = [(id, name) for (id, name) in result]
-        return id_list
 
 
 db = SQLAlchemy(
     model_class=SqlalchemyBaseModel,
-    engine_options={'pool_size': 2, 'pool_recycle': 10, 'pool_pre_ping': True},
+    engine_options={
+        'pool_size': 2,
+        'pool_recycle': 10,
+        'pool_pre_ping': True,
+    },
     session_options={
         'autocommit': False,
         'autoflush': False,

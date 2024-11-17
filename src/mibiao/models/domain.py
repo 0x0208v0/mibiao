@@ -23,12 +23,6 @@ class Domain(BaseModel, UserMixin):
         default='',
     )
 
-    url: Mapped[str] = mapped_column(
-        Text,
-        nullable=False,
-        default='',
-    )
-
     rank: Mapped[int] = mapped_column(
         Integer,
         nullable=False,
@@ -42,3 +36,13 @@ class Domain(BaseModel, UserMixin):
         default=False,
         server_default='0',
     )
+
+    def to_dict(self) -> dict:
+        return {
+            'domain': self.domain,
+            'description': self.description,
+            'rank': self.rank,
+            'is_hide': self.is_hide,
+            'display_created_at': self.format_created_at(tz='Asia/Shanghai'),
+            'display_updated_at': self.format_updated_at(tz='Asia/Shanghai'),
+        }

@@ -1,0 +1,52 @@
+<script id="me" type="text/x-template">
+  <div>
+    <el-form :model="form" :disabled="true" label-width="auto" style="max-width: 600px">
+      <el-form-item label="登陆邮箱">
+        <el-input v-model="form.email"/>
+      </el-form-item>
+      <el-form-item label="注册时间">
+        <el-input v-model="form.display_created_at"/>
+      </el-form-item>
+    </el-form>
+  </div>
+</script>
+
+
+<script>
+  async function getMyInfo() {
+    return await sendHttpGet('/api/users/me');
+  }
+</script>
+
+<script>
+  const me_component = {
+    template: `#me`,
+    delimiters: ["@{", "}"],
+    setup() {
+      const form = reactive({
+        email: '',
+        display_created_at: '',
+      })
+
+      onMounted(async () => {
+        const response = await getMyInfo();
+        const {info} = await response.json();
+        form.email = info['email'];
+        form.display_created_at = info['display_created_at'];
+
+      });
+
+      async function onSubmit() {
+        await saveConfig(JSON.stringify({config: form}));
+      }
+
+      return {form, onSubmit};
+    },
+  };
+  routes.push({
+    path: '/me',
+    name: 'me',
+    title: '我的信息',
+    component: me_component
+  });
+</script>

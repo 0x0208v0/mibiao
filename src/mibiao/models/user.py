@@ -46,6 +46,13 @@ class User(BaseModel, LoginUserMixin):
         nullable=False,
     )
 
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'email': self.email,
+            'display_created_at': self.format_created_at(tz='Asia/Shanghai'),
+        }
+
     @property
     def username(self) -> str:
         return self.email.split('@')[0]

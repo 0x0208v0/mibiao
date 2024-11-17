@@ -1,8 +1,13 @@
 <script id="domain" type="text/x-template">
   <div>
-    <el-button class="mb-1" @click="handleAdd">增加域名</el-button>
+    <el-button class="mb-1" @click="handleCreate">添加域名</el-button>
     <el-table :data="tableData" style="width: 100%" height="666">
       <el-table-column fixed prop="domain" label="域名" width="150"></el-table-column>
+      <el-table-column prop="is_hide" label="是否隐藏" width="120">
+        <template #default="scope">
+          @{ scope.row.is_hide ? '已隐藏' : '列表可见👀'}
+        </template>
+      </el-table-column>
       <el-table-column prop="rank" label="排序" width="80"></el-table-column>
       <el-table-column prop="description" label="描述" width="400"></el-table-column>
       <el-table-column prop="display_created_at" label="创建时间" width="180"></el-table-column>
@@ -14,8 +19,82 @@
         </template>
       </el-table-column>
     </el-table>
-  </div>
 
+    <!--新增-->
+    <el-dialog v-model="isCreateDialogVisible" title="新增域名" width="30%" :beforeClose="handleCreateDialogClose">
+      <el-form :model="createFormData" label-width="auto" label-position="right">
+        <el-form-item label="域名">
+          <el-input v-model="createFormData.domain" placeholder="example.com"/>
+        </el-form-item>
+        <el-form-item label="是否隐藏">
+          <el-switch v-model="createFormData.is_hide"/>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input-number v-model="createFormData.rank"/>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="createFormData.description" :rows="2" type="textarea" placeholder="请输入："/>
+        </el-form-item>
+        <el-divider border-style="dashed"></el-divider>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="handleCreateDialogCancel">取消</el-button>
+        <el-button type="primary" @click="handleCreateDialogSubmit">提交</el-button>
+      </span>
+      </template>
+    </el-dialog>
+
+    <!--编辑-->
+    <el-dialog v-model="isEditDialogVisible" title="编辑域名" width="30%" :beforeClose="handleEditDialogClose">
+      <el-form :model="editFormData" label-width="auto" label-position="right">
+        <el-form-item label="域名">
+          <el-input v-model="editFormData.domain" placeholder="example.com"/>
+        </el-form-item>
+        <el-form-item label="是否隐藏">
+          <el-switch v-model="editFormData.is_hide"/>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input-number v-model="editFormData.rank"/>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="editFormData.description" :rows="2" type="textarea" placeholder="请输入："/>
+        </el-form-item>
+        <el-divider border-style="dashed"></el-divider>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="handleEditDialogCancel">取消</el-button>
+        <el-button type="primary" @click="handleEditDialogSubmit">保存</el-button>
+      </span>
+      </template>
+    </el-dialog>
+
+    <!--删除-->
+    <el-dialog v-model="isDeleteDialogVisible" title="确定要删除吗？" width="30%" :beforeClose="handleDeleteDialogClose">
+      <el-form :model="deleteFormData" :disabled="true" label-width="auto" label-position="right">
+        <el-form-item label="域名">
+          <el-input v-model="deleteFormData.domain"/>
+        </el-form-item>
+        <el-form-item label="是否隐藏">
+          <el-switch v-model="deleteFormData.is_hide"/>
+        </el-form-item>
+        <el-form-item label="排序">
+          <el-input-number v-model="deleteFormData.rank"/>
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="deleteFormData.description" :rows="2" type="textarea"/>
+        </el-form-item>
+        <el-divider border-style="dashed"></el-divider>
+      </el-form>
+      <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="handleDeleteDialogCancel">取消</el-button>
+        <el-button type="primary" @click="handleDeleteDialogSubmit">确定</el-button>
+      </span>
+      </template>
+    </el-dialog>
+  </div>
 </script>
 
 
@@ -43,30 +122,141 @@
     template: `#domain`,
     delimiters: ["@{", "}"],
     setup() {
-      const tableData = ref([]);
 
       onMounted(async () => {
+        await refreshTableData();
+      });
+
+
+      /* 列表 */
+      const tableData = ref([]);
+
+      async function refreshTableData() {
         const response = await getDomainList();
         const {domain_list} = await response.json();
         tableData.value = domain_list;
+      }
+
+
+      /* 新增 */
+      const createFormData = ref({
+        domain: '',
+        rank: 0,
+        description: '',
+        is_hide: false,
       });
+      const isCreateDialogVisible = ref(false);
 
-      async function handleAdd() {
+      async function handleCreate() {
+        isCreateDialogVisible.value = true;
       }
 
-      async function handleEdit(row) {
-
+      async function handleCreateDialogClose(done) {
+        await handleCreateDialogCancel();
+        done();
       }
 
-      async function handleDelete(row) {
+      async function handleCreateDialogCancel() {
+        isCreateDialogVisible.value = false;
+        createFormData.value = {};
+      }
 
+      async function handleCreateDialogSubmit() {
+        await createDomain(JSON.stringify({domain: createFormData.value}));
+        await refreshTableData();
+        ElMessage({message: '已新增！', type: 'success'})
+        await handleCreateDialogCancel();
+      }
+
+
+      /* 编辑 */
+      const editFormData = ref({
+        id: 0,
+        domain: '',
+        rank: 0,
+        description: '',
+        is_hide: false,
+      });
+      const isEditDialogVisible = ref(false);
+
+      async function handleEdit(tableRowData) {
+        editFormData.value = Object.assign({}, tableRowData);
+        isEditDialogVisible.value = true;
+      }
+
+      async function handleEditDialogClose(done) {
+        await handleEditDialogCancel();
+        done();
+      }
+
+      async function handleEditDialogCancel() {
+        isEditDialogVisible.value = false;
+        editFormData.value = {};
+      }
+
+      async function handleEditDialogSubmit() {
+        await updateDomain(editFormData.value.id, JSON.stringify({domain: editFormData.value}));
+        await refreshTableData();
+        ElMessage({message: '已保存！', type: 'success'});
+        await handleEditDialogCancel();
+      }
+
+
+      /* 删除*/
+      const deleteFormData = ref({
+        id: 0,
+        domain: '',
+        rank: 0,
+        description: '',
+        is_hide: false,
+      });
+      const isDeleteDialogVisible = ref(false);
+
+      async function handleDelete(tableRowData) {
+        deleteFormData.value = Object.assign({}, tableRowData);
+        isDeleteDialogVisible.value = true;
+      }
+
+      async function handleDeleteDialogClose(done) {
+        await handleDeleteDialogCancel();
+        done();
+      }
+
+      async function handleDeleteDialogCancel() {
+        isDeleteDialogVisible.value = false;
+        deleteFormData.value = {};
+      }
+
+      async function handleDeleteDialogSubmit() {
+        await deleteDomain(deleteFormData.value.id);
+        await refreshTableData();
+        ElMessage({message: '删除成功！', type: 'success'});
+        await handleDeleteDialogCancel();
       }
 
       return {
         tableData,
-        handleAdd,
+
+        createFormData,
+        isCreateDialogVisible,
+        handleCreate,
+        handleCreateDialogClose,
+        handleCreateDialogCancel,
+        handleCreateDialogSubmit,
+
+        editFormData,
+        isEditDialogVisible,
         handleEdit,
+        handleEditDialogClose,
+        handleEditDialogCancel,
+        handleEditDialogSubmit,
+
+        deleteFormData,
+        isDeleteDialogVisible,
         handleDelete,
+        handleDeleteDialogClose,
+        handleDeleteDialogCancel,
+        handleDeleteDialogSubmit,
       };
     },
   };

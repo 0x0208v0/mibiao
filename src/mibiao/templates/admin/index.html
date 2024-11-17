@@ -148,7 +148,8 @@
         watch(
             () => router.currentRoute,
             (val) => {
-              console.log('watch', val.value);
+              activeIndex.value = route.path;
+              console.log('watch', val.value, route.path);
             },
             {
               immediate: true,

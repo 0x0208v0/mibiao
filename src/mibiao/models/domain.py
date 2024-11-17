@@ -39,6 +39,7 @@ class Domain(BaseModel, UserMixin):
 
     def to_dict(self) -> dict:
         return {
+            'id': self.id,
             'domain': self.domain,
             'description': self.description,
             'rank': self.rank,

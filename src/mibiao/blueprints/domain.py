@@ -112,23 +112,23 @@ def delete(id: str):
 @blueprint.get('/api/domains')
 @login_required
 def get_domain_list():
-    domain_list = Domain.get_list(user=current_user, order_by=[Domain.rank.desc(), Domain.id.desc()])
+    domain_list = Domain.get_list(user=current_user, order_by=[Domain.rank, Domain.id.desc()])
     return {'domain_list': [domain.to_dict() for domain in domain_list]}
 
 
 @blueprint.post('/api/domains')
 @login_required
 def create_domain():
-    domain = Domain.create(request.json, user=current_user)
+    domain = Domain.create(request.json['domain'], user=current_user)
     return {'domain': domain.to_dict()}
 
 
-@blueprint.post('/api/domains/<string:domain_id>')
+@blueprint.put('/api/domains/<string:domain_id>')
 @login_required
 def update_domain(domain_id: str):
     domain = Domain.get_or_404(domain_id)
     domain.verify_owner(current_user)
-    domain.update(request.json)
+    domain.update(request.json['domain'])
     return {'domain': domain.to_dict()}
 
 

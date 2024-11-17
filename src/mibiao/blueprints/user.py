@@ -61,3 +61,9 @@ def delete():
     current_user.delete()
     flash('账户已删除', 'success')
     return redirect(url_for('main.index'))
+
+
+@blueprint.get('/api/users/me')
+@login_required
+def get_my_info():
+    return {'info': current_user.to_dict()}

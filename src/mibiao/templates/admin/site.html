@@ -1,21 +1,76 @@
 <script id="site" type="text/x-template">
   <div>
-    米站管理
+    <el-form :model="form" label-width="auto" style="max-width: 600px">
+      <el-form-item label="网站标题">
+        <el-input v-model="form.site_title"/>
+      </el-form-item>
+      <el-form-item label="图标URL">
+        <el-input v-model="form.site_icon_url"/>
+      </el-form-item>
+      <el-form-item label="品牌名">
+        <el-input v-model="form.site_brand"/>
+      </el-form-item>
+      <el-form-item label="beta">
+        <el-input v-model="form.site_beta"/>
+      </el-form-item>
+      <el-form-item label="Copyright">
+        <el-input v-model="form.site_copyright"/>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">保存</el-button>
+      </el-form-item>
+    </el-form>
   </div>
+</script>
 
+
+<script>
+  async function getConfig() {
+    return await sendHttpGet('/api/configs');
+  }
+
+  async function saveConfig(data) {
+    return await sendHttpPost('/api/configs', data);
+  }
 </script>
 
 <script>
+  const {reactive, onMounted} = Vue;
+
+  const form = reactive({
+    site_title: '',
+    site_icon_url: '',
+    site_brand: '',
+    site_beta: '',
+    site_copyright: '',
+  })
+
   const site_component = {
+    template: `#site`,
     delimiters: ["@{", "}"],
     setup() {
+
+      onMounted(async () => {
+        const response = await getConfig();
+        const {config} = await response.json();
+        form.site_title = config['site_title'];
+        form.site_icon_url = config['site_icon_url'];
+        form.site_brand = config['site_brand'];
+        form.site_beta = config['site_beta'];
+        form.site_copyright = config['site_copyright'];
+      });
+
+      async function onSubmit() {
+        await saveConfig(JSON.stringify({config: form}));
+      }
+
+      return {form, onSubmit};
     },
-    template: `#site`,
   };
   routes.push({
     path: '/site',
     name: 'site',
-    title: '站点信息',
+    title: '网站信息',
     component: site_component
   });
 </script>

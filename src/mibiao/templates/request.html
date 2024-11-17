@@ -39,6 +39,7 @@
   async function sendHttpRequest(method, url, data, options) {
     const headers = {
       Authorization: `Bearer ${getToken()}`,
+      'content-type': 'application/json',
     };
 
     const defaultOptions = {

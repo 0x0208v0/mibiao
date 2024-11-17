@@ -19,12 +19,14 @@ class SqlalchemyBaseModel(DeclarativeBase):
         primary_key=True,
         autoincrement=True,
     )
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
         default=lambda: datetime.utcnow(),
         server_default=func.current_timestamp(),
     )
+
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         nullable=False,
@@ -50,10 +52,8 @@ class SqlalchemyBaseModel(DeclarativeBase):
     def get_obj_id(cls, obj_or_id: Self | int) -> int:
         if isinstance(obj_or_id, int):
             return obj_or_id
-
         elif isinstance(obj_or_id, cls):
             return obj_or_id.id
-
         else:
             obj_id = getattr(obj_or_id, 'id', None)
             if obj_id is None:
@@ -72,14 +72,13 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def build_stmt(
-        cls,
-        *where,
-        order_by: list | None = None,
-        offset: int | None = None,
-        limit: int | None = None,
+            cls,
+            *where,
+            order_by: list | None = None,
+            offset: int | None = None,
+            limit: int | None = None,
     ) -> Select:
         stmt = select(cls)
-
         if where:
             stmt = stmt.where(*where)
         if order_by:
@@ -88,7 +87,6 @@ class SqlalchemyBaseModel(DeclarativeBase):
             stmt = stmt.offset(offset)
         if limit is not None:
             stmt = stmt.limit(limit)
-
         return stmt
 
     @classmethod
@@ -101,11 +99,11 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def get_list(
-        cls,
-        *where,
-        order_by: list | None = None,
-        offset: int | None = None,
-        limit: int | None = None,
+            cls,
+            *where,
+            order_by: list | None = None,
+            offset: int | None = None,
+            limit: int | None = None,
     ) -> list[Self]:
         stmt = cls.build_stmt(*where, order_by=order_by, offset=offset, limit=limit)
         result = db.session.execute(stmt).scalars()
@@ -113,11 +111,11 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def get_list_by_page(
-        cls,
-        *where,
-        order_by: list | None = None,
-        page_num: int = 1,
-        page_size: int = 20,
+            cls,
+            *where,
+            order_by: list | None = None,
+            page_num: int = 1,
+            page_size: int = 20,
     ) -> list[Self]:
         if not order_by:
             order_by = [cls.created_at.desc(), cls.id.desc()]
@@ -148,3 +146,5 @@ db = SQLAlchemy(
 )
 
 BaseModel: type[SqlalchemyBaseModel] = db.Model
+
+session = db.session

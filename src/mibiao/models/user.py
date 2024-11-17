@@ -1,7 +1,8 @@
 from typing import Self
 
-from flask_login import UserMixin
+from flask_login import UserMixin as LoginUserMixin
 from sqlalchemy import Boolean
+from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
@@ -11,7 +12,7 @@ from werkzeug.security import generate_password_hash
 from mibiao.models.base import BaseModel
 
 
-class User(BaseModel, UserMixin):
+class User(BaseModel, LoginUserMixin):
     email: Mapped[str] = mapped_column(
         String(64),
         unique=True,
@@ -84,14 +85,22 @@ class User(BaseModel, UserMixin):
         return user
 
     @classmethod
-    def register(cls, email: str, password: str, commit: bool = True) -> Self:
-        email = (email or '').strip()
+    def validate_email(cls, email: str):
         if not email:
             raise ValueError('邮箱不能为空')
 
-        password = (password or '').strip()
+    @classmethod
+    def validate_password(cls, password: str):
         if not password:
             raise ValueError('密码不能为空')
+
+    @classmethod
+    def register(cls, email: str, password: str, commit: bool = True) -> Self:
+        email = (email or '').strip()
+        cls.validate_email(email)
+
+        password = (password or '').strip()
+        cls.validate_password(password)
 
         user = cls.get_by_email(email)
         if user:
@@ -101,3 +110,14 @@ class User(BaseModel, UserMixin):
         user.password = password
         user.save(commit=commit)
         return user
+
+
+class UserMixin:
+    user_id: Mapped[int] = mapped_column(
+        Integer,
+        nullable=False,
+    )
+
+
+def get_user_id(user_or_id: User | int) -> int:
+    return user_or_id if isinstance(user_or_id, int) else user_or_id.id

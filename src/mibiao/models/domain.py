@@ -6,14 +6,10 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from mibiao.models.base import BaseModel
+from mibiao.models.user import UserMixin
 
 
-class Domain(BaseModel):
-    user_id: Mapped[int] = mapped_column(
-        Integer,
-        nullable=False,
-    )
-    
+class Domain(BaseModel, UserMixin):
     domain: Mapped[str] = mapped_column(
         String(256),
         nullable=False,

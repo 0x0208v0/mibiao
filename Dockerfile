@@ -1,11 +1,11 @@
-FROM python:3.11.9-slim-bookworm as pyhton311
+FROM python:3.12-slim-bookworm as python3
 WORKDIR /mibiao_data
 COPY ./src /mibiao_data/src
 COPY ./pyproject.toml /mibiao_data/pyproject.toml
 RUN  python -m pip install --upgrade build  && python -m build
 
 
-FROM python:3.11.9-slim-bookworm
+FROM python:3.12-slim-bookworm
 
 
 RUN apt update \
@@ -22,7 +22,7 @@ RUN apt update \
 
 WORKDIR /mibiao_data
 
-COPY --from=pyhton311 /mibiao_data/dist /mibiao_data/dist
+COPY --from=python3 /mibiao_data/dist /mibiao_data/dist
 
 RUN python -m pip install --no-cache-dir /mibiao_data/dist/*.whl && rm -rf /mibiao_data/dist
 

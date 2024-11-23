@@ -12,11 +12,6 @@ from mibiao.utils.password import check_password_hash
 from mibiao.utils.password import generate_password_hash
 
 
-# 用 werkzeug 的 check_password_hash 会突然增加30MB内存占用？？
-# from werkzeug.security import check_password_hash
-# from werkzeug.security import generate_password_hash
-
-
 class User(BaseModel, LoginUserMixin):
     email: Mapped[str] = mapped_column(
         String(64),

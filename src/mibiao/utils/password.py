@@ -1,5 +1,10 @@
 from passlib.context import CryptContext
 
+# 用 werkzeug 的 check_password_hash 会突然增加30MB内存占用？？
+# from werkzeug.security import check_password_hash
+# from werkzeug.security import generate_password_hash
+
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 

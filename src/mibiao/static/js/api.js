@@ -9,7 +9,7 @@ async function checkResponseDataOkOrError(status, data) {
 
 async function checkResponseStatusOkOrError(status) {
   if (Math.floor(status / 100) === 2 || Math.floor(status / 100) === 3) {
-    return;
+    // 正确的请求
   } else if (status === 400) {
     ElMessage.error('参数错误');
     throw new Error('请求出错');
@@ -37,7 +37,8 @@ function getToken() {
 
 async function sendHttpRequest(method, url, data, options) {
   const headers = {
-    Authorization: `Bearer ${getToken()}`, 'content-type': 'application/json',
+    Authorization: `Bearer ${getToken()}`,
+    'content-type': 'application/json',
   };
   const defaultOptions = {method, headers};
   if (method === 'GET') {

@@ -5,7 +5,7 @@ from flask import request
 from flask_login import current_user
 from flask_login import login_required
 
-from mibiao.models import Domain
+from mibiao.models.domain import Domain
 
 logger = logging.getLogger(__name__)
 

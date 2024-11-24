@@ -26,6 +26,12 @@
         <el-form-item label="域名">
           <el-input v-model="createFormData.name" placeholder="example.com"/>
         </el-form-item>
+        <el-form-item label="LOGO URL">
+          <el-input
+              v-model="createFormData.logo_url"
+              placeholder="请输入LOGO的URL，例如：https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png"
+          />
+        </el-form-item>
         <el-form-item label="标签">
           <el-select v-model="createFormData.tag_ids" multiple placeholder="请选择标签" style="width: 240px">
             <template #label="{ label, value }">
@@ -77,6 +83,12 @@
         <el-form-item label="域名">
           <el-input v-model="editFormData.name" placeholder="example.com"/>
         </el-form-item>
+        <el-form-item label="LOGO URL">
+          <el-input
+              v-model="editFormData.logo_url"
+              placeholder="请输入LOGO的URL，例如：https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png"
+          />
+        </el-form-item>
         <el-form-item label="标签">
           <el-select v-model="editFormData.tag_ids" multiple placeholder="请选择标签" style="width: 240px">
             <template #label="{ label, value }">
@@ -127,6 +139,12 @@
       <el-form :model="deleteFormData" :disabled="true" label-width="auto" label-position="right">
         <el-form-item label="域名">
           <el-input v-model="deleteFormData.name"/>
+        </el-form-item>
+        <el-form-item label="LOGO URL">
+          <el-input
+              v-model="deleteFormData.logo_url"
+              placeholder="什么也没写"
+          />
         </el-form-item>
         <el-form-item label="标签">
           <el-select v-model="deleteFormData.tag_ids" multiple placeholder="无标签" style="width: 240px">
@@ -203,6 +221,7 @@
       /* 新增 */
       const createFormData = ref({
         name: '',
+        logo_url: '',
         tag_ids: [],
         rank: 0,
         description: '',
@@ -235,6 +254,7 @@
       const editFormData = ref({
         id: 0,
         name: '',
+        logo_url: '',
         tag_ids: [],
         rank: 0,
         description: '',
@@ -274,6 +294,7 @@
       const deleteFormData = ref({
         id: 0,
         name: '',
+        logo_url: '',
         tag_ids: [],
         rank: 0,
         description: '',

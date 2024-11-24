@@ -2,6 +2,10 @@
 
 {% block styles %}
   {{ super() }}
+  <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.css"
+        integrity="sha512-vRbASHFS0JiM4xwX/iqr9mrD/pXGnOP2CLdmXSSNAjLdgQVFyt4qI+BIoUW7/81uSuKRj0cWv3Dov8vVQOTHLw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"
+  />
   <style>
       .tag {
           min-width: 31px;
@@ -54,6 +58,23 @@
   </style>
 {% endblock %}
 
+{% block scripts %}
+  {{ super() }}
+  <script src="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.js"
+          integrity="sha512-lZD0JiwhtP4UkFD1mc96NiTZ14L7MjyX5Khk8PMxJszXMLvu7kjq1sp4bb0tcL6MY+/4sIuiUxubOqoueHrW4w=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"
+  ></script>
+  <script>
+    for (const avatar of document.getElementsByClassName('avatar')) {
+      const viewer = new Viewer(avatar, {
+        inline: false,
+        viewed() {
+          viewer.zoomTo(1);
+        },
+      });
+    }
+  </script>
+{% endblock %}
 
 {% block content %}
   <div class="domain-list flex">

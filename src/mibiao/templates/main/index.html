@@ -66,11 +66,11 @@
             </div>
             <div>
               <div class="text-[14px] font-[700] text-[#555]">
-                <a href="{{ domain.url or '' }}">{{ domain.name }}</a>
+                <a href="{{ domain.url }}">{{ domain.name }}</a>
               </div>
-              <div class="text-[12px] text-[#858585] border-gray-300 mb-[10px]">
+              <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
                 {% if domain.description %}
-                  <span> {{ domain.description or '' }}</span>
+                  {{ domain.description | markdown_to_html | safe }}
                 {% endif %}
                 {% if domain.selling_price %}
                   <span>售价：{{ domain.selling_price }}</span>

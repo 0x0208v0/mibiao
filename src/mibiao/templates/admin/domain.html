@@ -50,7 +50,7 @@
           <el-input-number v-model="createFormData.rank"/>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="createFormData.description" :rows="4" type="textarea" placeholder="请输入："/>
+          <el-input v-model="createFormData.description" :rows="6" type="textarea" placeholder="请输入："/>
         </el-form-item>
         <el-form-item label="售价">
           <el-input v-model="createFormData.selling_price" placeholder="请输入售价，如：100元"/>
@@ -59,7 +59,7 @@
           <el-input v-model="createFormData.renewal_price" placeholder="请输入续费，如：59元"/>
         </el-form-item>
         <el-form-item label="交易方式">
-          <el-input v-model="createFormData.renewal_price" placeholder="请输入交易方式，如：PUSH"/>
+          <el-input v-model="createFormData.transaction_method" placeholder="请输入交易方式，如：PUSH"/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>
@@ -101,7 +101,7 @@
           <el-input-number v-model="editFormData.rank"/>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="editFormData.description" :rows="4" type="textarea" placeholder="请用一段话描述它"/>
+          <el-input v-model="editFormData.description" :rows="6" type="textarea" placeholder="请用一段话描述它"/>
         </el-form-item>
         <el-form-item label="售价">
           <el-input v-model="editFormData.selling_price" placeholder="请输入售价，如：100元"/>
@@ -110,7 +110,7 @@
           <el-input v-model="editFormData.renewal_price" placeholder="请输入续费，如：59元"/>
         </el-form-item>
         <el-form-item label="交易方式">
-          <el-input v-model="editFormData.renewal_price" placeholder="请输入交易方式，如：PUSH"/>
+          <el-input v-model="editFormData.transaction_method" placeholder="请输入交易方式，如：PUSH"/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>
@@ -152,7 +152,7 @@
           <el-input-number v-model="deleteFormData.rank"/>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="deleteFormData.description" :rows="4" type="textarea" placeholder="什么也没写"/>
+          <el-input v-model="deleteFormData.description" :rows="6" type="textarea" placeholder="什么也没写"/>
         </el-form-item>
         <el-form-item label="售价">
           <el-input v-model="deleteFormData.selling_price" placeholder="什么也没写"/>
@@ -161,7 +161,7 @@
           <el-input v-model="deleteFormData.renewal_price" placeholder="什么也没写"/>
         </el-form-item>
         <el-form-item label="交易方式">
-          <el-input v-model="deleteFormData.renewal_price" placeholder="什么也没写"/>
+          <el-input v-model="deleteFormData.transaction_method" placeholder="什么也没写"/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>

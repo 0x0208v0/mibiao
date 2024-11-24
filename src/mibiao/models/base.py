@@ -7,10 +7,11 @@ from typing import Self
 from typing import TYPE_CHECKING
 
 import pendulum
+import shortuuid
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
-from sqlalchemy import Integer
 from sqlalchemy import Select
+from sqlalchemy import String
 from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase
@@ -33,10 +34,10 @@ class JsonEncoder(json.JSONEncoder):
 
 
 class SqlalchemyBaseModel(DeclarativeBase):
-    id: Mapped[int] = mapped_column(
-        Integer,
+    id: Mapped[str] = mapped_column(
+        String(22),
         primary_key=True,
-        autoincrement=True,
+        default=shortuuid.uuid,
     )
 
     created_at: Mapped[datetime] = mapped_column(
@@ -66,19 +67,26 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return object_session(self)
 
     @classmethod
-    def create(cls, data: dict, *, user: User | None = None, commit: bool = True) -> Self:
+    def create(
+            cls, data: dict, *, user: User | None = None, commit: bool = True,
+    ) -> Self:
         obj = cls(**data)
         if user:
             obj.user_id = user.id
         db.session.add(obj)
-        db.session.flush()
+        db.session.flush([obj])
         if commit:
             db.session.commit()
         return obj
 
     def update(self, data: dict, commit: bool = True):
         for k, v in data.items():
-            if hasattr(self, k) and k not in {'id', 'created_at', 'updated_at', 'user_id'}:
+            if hasattr(self, k) and k not in {
+                'id',
+                'created_at',
+                'updated_at',
+                'user_id',
+            }:
                 setattr(self, k, v)
         db.session.add(self)
         db.session.flush([self])
@@ -98,14 +106,17 @@ class SqlalchemyBaseModel(DeclarativeBase):
             db.session.commit()
 
     def to_dict(self) -> dict:
-        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
+        return {
+            column.name: getattr(self, column.name, None)
+            for column in getattr(self, '__table__').columns
+        }
 
     def to_json(self, decoder_cls=None) -> str:
         return json.dumps(self.to_dict(), cls=decoder_cls or JsonEncoder)
 
     @classmethod
-    def get_obj_id(cls, obj_or_id: Self | int) -> int:
-        if isinstance(obj_or_id, int):
+    def get_obj_id(cls, obj_or_id: Self | str) -> str:
+        if isinstance(obj_or_id, str):
             return obj_or_id
         elif isinstance(obj_or_id, cls):
             return obj_or_id.id
@@ -116,7 +127,7 @@ class SqlalchemyBaseModel(DeclarativeBase):
             return obj_id
 
     @classmethod
-    def get(cls, ident) -> Self | None:
+    def get(cls, ident: str) -> Self | None:
         return db.session.get(cls, ident)
 
     @classmethod
@@ -189,8 +200,14 @@ class SqlalchemyBaseModel(DeclarativeBase):
             limit=limit,
             user=user,
         )
-        result = db.session.execute(query).scalars()
-        return list(result)
+        return list(db.session.execute(query).scalars())
+
+    @classmethod
+    def get_list_by_ids(cls, ids: list[str]) -> list[Self]:
+        if not ids:
+            return []
+        query = cls.build_query(cls.id.in_(ids))
+        return list(db.session.execute(query).scalars())
 
     @classmethod
     def get_list_by_page(
@@ -218,10 +235,6 @@ db = SQLAlchemy(
         'pool_size': 2,
         'pool_recycle': 10,
         'pool_pre_ping': True,
-
-        # SQLAlchemy Memory Leak: https://github.com/sqlalchemy/sqlalchemy/discussions/6573
-        # Potential memory leak? https://github.com/sqlalchemy/sqlalchemy/discussions/9726
-        'query_cache_size': 0,
     },
     session_options={
         'autocommit': False,

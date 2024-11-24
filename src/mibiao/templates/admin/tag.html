@@ -1,15 +1,15 @@
-<script id="domain" type="text/x-template">
+<script id="tag" type="text/x-template">
   <div>
-    <el-button class="mb-1" @click="handleCreate">添加域名</el-button>
+    <el-button class="mb-1" @click="handleCreate">添加标签</el-button>
     <el-table :data="tableData" style="width: 100%" height="666">
-      <el-table-column fixed prop="name" label="域名" width="150"></el-table-column>
+      <el-table-column fixed prop="name" label="标签" width="150"></el-table-column>
+      <el-table-column prop="url_path_name" label="URL路径名" width="150"></el-table-column>
       <el-table-column prop="is_hide" label="是否隐藏" width="120">
         <template #default="scope">
           @{ scope.row.is_hide ? '已隐藏' : '列表可见👀'}
         </template>
       </el-table-column>
       <el-table-column prop="rank" label="排序" width="80"></el-table-column>
-      <el-table-column prop="description" label="描述" width="400"></el-table-column>
       <el-table-column prop="display_created_at" label="创建时间" width="180"></el-table-column>
       <el-table-column prop="display_updated_at" label="更新时间" width="180"></el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
@@ -21,36 +21,19 @@
     </el-table>
 
     <!--新增-->
-    <el-dialog v-model="isCreateDialogVisible" title="新增域名" width="30%" :beforeClose="handleCreateDialogClose">
+    <el-dialog v-model="isCreateDialogVisible" title="新增标签" width="30%" :beforeClose="handleCreateDialogClose">
       <el-form :model="createFormData" label-width="auto" label-position="right">
-        <el-form-item label="域名">
+        <el-form-item label="标签">
           <el-input v-model="createFormData.name" placeholder="example.com"/>
         </el-form-item>
-        <el-form-item label="标签">
-          <el-select v-model="createFormData.tag_ids" multiple placeholder="请选择标签" style="width: 240px">
-            <template #label="{ label, value }">
-              <span>@{ label }</span>
-            </template>
-            <el-option
-                v-for="tag in tags"
-                :key="tag.id"
-                :label="tag.name"
-                :value="tag.id"
-            >
-              <div class="flex items-center">
-                <span>@{ tag.name }</span>
-              </div>
-            </el-option>
-          </el-select>
+        <el-form-item label="URL路径名">
+          <el-input v-model="createFormData.url_path_name" placeholder="example.com"/>
         </el-form-item>
         <el-form-item label="是否隐藏">
           <el-switch v-model="createFormData.is_hide"/>
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="createFormData.rank"/>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="createFormData.description" :rows="2" type="textarea" placeholder="请输入："/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>
@@ -63,36 +46,19 @@
     </el-dialog>
 
     <!--编辑-->
-    <el-dialog v-model="isEditDialogVisible" title="编辑域名" width="30%" :beforeClose="handleEditDialogClose">
+    <el-dialog v-model="isEditDialogVisible" title="编辑标签" width="30%" :beforeClose="handleEditDialogClose">
       <el-form :model="editFormData" label-width="auto" label-position="right">
-        <el-form-item label="域名">
+        <el-form-item label="标签">
           <el-input v-model="editFormData.name" placeholder="example.com"/>
         </el-form-item>
-        <el-form-item label="标签">
-          <el-select v-model="editFormData.tag_ids" multiple placeholder="请选择标签" style="width: 240px">
-            <template #label="{ label, value }">
-              <span>@{ label }</span>
-            </template>
-            <el-option
-                v-for="tag in tags"
-                :key="tag.id"
-                :label="tag.name"
-                :value="tag.id"
-            >
-              <div class="flex items-center">
-                <span>@{ tag.name }</span>
-              </div>
-            </el-option>
-          </el-select>
+        <el-form-item label="URL路径名">
+          <el-input v-model="editFormData.url_path_name" placeholder="example.com"/>
         </el-form-item>
         <el-form-item label="是否隐藏">
           <el-switch v-model="editFormData.is_hide"/>
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="editFormData.rank"/>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="editFormData.description" :rows="2" type="textarea" placeholder="请输入："/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>
@@ -107,7 +73,7 @@
     <!--删除-->
     <el-dialog v-model="isDeleteDialogVisible" title="确定要删除吗？" width="30%" :beforeClose="handleDeleteDialogClose">
       <el-form :model="deleteFormData" :disabled="true" label-width="auto" label-position="right">
-        <el-form-item label="域名">
+        <el-form-item label="标签">
           <el-input v-model="deleteFormData.name"/>
         </el-form-item>
         <el-form-item label="是否隐藏">
@@ -115,9 +81,6 @@
         </el-form-item>
         <el-form-item label="排序">
           <el-input-number v-model="deleteFormData.rank"/>
-        </el-form-item>
-        <el-form-item label="描述">
-          <el-input v-model="deleteFormData.description" :rows="2" type="textarea"/>
         </el-form-item>
         <el-divider border-style="dashed"></el-divider>
       </el-form>
@@ -133,40 +96,31 @@
 
 
 <script>
-  const domain_component = {
-    template: `#domain`,
+  const tag_component = {
+    template: `#tag`,
     delimiters: ["@{", "}"],
     setup() {
 
       onMounted(async () => {
         await refreshTableData();
-        await fetchTags();
       });
 
-      const tags = ref([]);
-
-      async function fetchTags() {
-        const response = await getTagList();
-        const {tag_list} = await response.json();
-        tags.value = tag_list;
-      }
 
       /* 列表 */
       const tableData = ref([]);
 
       async function refreshTableData() {
-        const response = await getDomainList();
-        const {domain_list} = await response.json();
-        tableData.value = domain_list;
+        const response = await getTagList();
+        const {tag_list} = await response.json();
+        tableData.value = tag_list;
       }
 
 
       /* 新增 */
       const createFormData = ref({
         name: '',
-        tag_ids: [],
+        url_path_name: '',
         rank: 0,
-        description: '',
         is_hide: false,
       });
       const isCreateDialogVisible = ref(false);
@@ -186,7 +140,7 @@
       }
 
       async function handleCreateDialogSubmit() {
-        await createDomain(JSON.stringify({domain: createFormData.value}));
+        await createTag(JSON.stringify({tag: createFormData.value}));
         await refreshTableData();
         ElMessage({message: '已新增！', type: 'success'})
         await handleCreateDialogCancel();
@@ -197,9 +151,8 @@
       const editFormData = ref({
         id: 0,
         name: '',
-        tag_ids: [],
+        url_path_name: '',
         rank: 0,
-        description: '',
         is_hide: false,
       });
       const isEditDialogVisible = ref(false);
@@ -220,7 +173,7 @@
       }
 
       async function handleEditDialogSubmit() {
-        await updateDomain(editFormData.value.id, JSON.stringify({domain: editFormData.value}));
+        await updateTag(editFormData.value.id, JSON.stringify({tag: editFormData.value}));
         await refreshTableData();
         ElMessage({message: '已保存！', type: 'success'});
         await handleEditDialogCancel();
@@ -231,8 +184,8 @@
       const deleteFormData = ref({
         id: 0,
         name: '',
+        url_path_name: '',
         rank: 0,
-        description: '',
         is_hide: false,
       });
       const isDeleteDialogVisible = ref(false);
@@ -253,14 +206,13 @@
       }
 
       async function handleDeleteDialogSubmit() {
-        await deleteDomain(deleteFormData.value.id);
+        await deleteTag(deleteFormData.value.id);
         await refreshTableData();
         ElMessage({message: '删除成功！', type: 'success'});
         await handleDeleteDialogCancel();
       }
 
       return {
-        tags,
         tableData,
 
         createFormData,
@@ -288,9 +240,9 @@
   };
 
   routes.push({
-    path: '/domain',
-    name: 'domain',
-    title: '域名管理',
-    component: domain_component
+    path: '/tag',
+    name: 'tag',
+    title: '标签',
+    component: tag_component
   });
 </script>

@@ -1,44 +1,35 @@
 <script id="site" type="text/x-template">
   <div>
-    <el-form :model="form" label-width="auto" style="max-width: 600px">
+    <el-form :model="formData" label-width="auto" style="max-width: 600px">
       <el-form-item label="网站标题">
-        <el-input v-model="form.site_title"/>
+        <el-input v-model="formData.site_title"/>
       </el-form-item>
       <el-form-item label="图标URL">
-        <el-input v-model="form.site_icon_url"/>
+        <el-input v-model="formData.site_icon_url"/>
       </el-form-item>
       <el-form-item label="品牌名">
-        <el-input v-model="form.site_brand"/>
+        <el-input v-model="formData.site_brand"/>
       </el-form-item>
       <el-form-item label="beta">
-        <el-input v-model="form.site_beta"/>
+        <el-input v-model="formData.site_beta"/>
       </el-form-item>
       <el-form-item label="Copyright">
-        <el-input v-model="form.site_copyright"/>
+        <el-input v-model="formData.site_copyright"/>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">保存</el-button>
+        <el-button type="primary" @click="handleSubmit">保存</el-button>
       </el-form-item>
     </el-form>
   </div>
 </script>
 
-<script>
-  async function getConfig() {
-    return await sendHttpGet('/api/configs');
-  }
-
-  async function saveConfig(data) {
-    return await sendHttpPost('/api/configs', data);
-  }
-</script>
 
 <script>
   const site_component = {
     template: `#site`,
     delimiters: ['@{', '}'],
     setup() {
-      const form = reactive({
+      const formData = reactive({
         site_title: '',
         site_icon_url: '',
         site_brand: '',
@@ -48,20 +39,22 @@
 
       onMounted(async () => {
         const {config} = await getConfig();
-        form.site_title = config['site_title'];
-        form.site_icon_url = config['site_icon_url'];
-        form.site_brand = config['site_brand'];
-        form.site_beta = config['site_beta'];
-        form.site_copyright = config['site_copyright'];
+        formData.site_title = config['site_title'];
+        formData.site_icon_url = config['site_icon_url'];
+        formData.site_brand = config['site_brand'];
+        formData.site_beta = config['site_beta'];
+        formData.site_copyright = config['site_copyright'];
       });
 
-      async function onSubmit() {
-        await saveConfig(JSON.stringify({config: form}));
+      async function handleSubmit() {
+        await saveConfig(JSON.stringify({config: formData}));
+        ElMessage({message: '已保存！', type: 'success'});
       }
 
-      return {form, onSubmit};
+      return {formData, handleSubmit};
     },
   };
+
   routes.push({
     path: '/site',
     name: 'site',

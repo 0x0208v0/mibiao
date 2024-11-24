@@ -104,10 +104,14 @@
           <div class="text-[16px] text-[#555]">{{ user.name }}</div>
           <div class="flex">
             <div>
-              <img src="{{ url_for('static', filename='setting-two.svg') }}" width="16" height="16" alt="icon"/>
+              <a href="{{ url_for('admin.index') }}">
+                <img src="{{ url_for('static', filename='setting-two.svg') }}" width="16" height="16" alt="icon"/>
+              </a>
             </div>
             <div class="ml-[6px]">
-              <img src="{{ url_for('static', filename='logout.svg') }}" width="16" height="16" alt="icon"/>
+              <a href="{{ url_for('user.logout') }}">
+                <img src="{{ url_for('static', filename='logout.svg') }}" width="16" height="16" alt="icon"/>
+              </a>
             </div>
           </div>
         </div>

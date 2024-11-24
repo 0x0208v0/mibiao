@@ -67,6 +67,8 @@ class User(BaseModel, LoginUserMixin):
             'id': self.id,
             'email': self.email,
             'display_created_at': self.format_created_at(tz='Asia/Shanghai'),
+            'avatar_url': self.avatar_url,
+            'comment': self.comment,
         }
 
     @property

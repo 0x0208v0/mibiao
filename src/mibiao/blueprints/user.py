@@ -8,10 +8,35 @@ from flask_login import current_user
 from flask_login import login_required
 from flask_login import login_user
 from flask_login import logout_user
+from flask_wtf import FlaskForm
+from wtforms import BooleanField
+from wtforms import StringField
+from wtforms import SubmitField
+from wtforms.validators import DataRequired
+from wtforms.validators import Email
 
-from mibiao.forms.user import LoginForm
-from mibiao.forms.user import RegisterForm
 from mibiao.models import User
+
+
+class BaseForm(FlaskForm):
+    def flash_errors(self):
+        for field, errors in self.errors.items():
+            for error in errors:
+                flash(f"{getattr(self, field).label.text}: {error}", 'error')
+
+
+class LoginForm(BaseForm):
+    email = StringField('邮箱：', validators=[DataRequired(), Email()])
+    password = StringField('密码：', validators=[DataRequired()])
+    remember_me = BooleanField('保持登陆')
+    submit = SubmitField('登陆')
+
+
+class RegisterForm(BaseForm):
+    email = StringField('邮箱：', validators=[DataRequired(), Email()])
+    password = StringField('密码：', validators=[DataRequired()])
+    submit = SubmitField('注册')
+
 
 blueprint = Blueprint('user', __name__, url_prefix='/')
 

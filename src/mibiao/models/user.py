@@ -2,10 +2,11 @@ from typing import Self
 
 from flask_login import UserMixin as LoginUserMixin
 from sqlalchemy import Boolean
-from sqlalchemy import Integer
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, foreign
+from sqlalchemy.orm import declared_attr
 from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import relationship
 
 from mibiao.models.base import BaseModel
 from mibiao.utils.password import check_password_hash
@@ -18,11 +19,13 @@ class User(BaseModel, LoginUserMixin):
         unique=True,
         index=True,
         nullable=False,
+        comment='邮箱',
     )
 
     password_hash: Mapped[str] = mapped_column(
         String(256),
         nullable=False,
+        comment='密码HASH',
     )
 
     is_active: Mapped[bool] = mapped_column(
@@ -30,6 +33,7 @@ class User(BaseModel, LoginUserMixin):
         nullable=False,
         default=True,
         server_default='1',
+        comment='是否活跃',
     )
 
     name: Mapped[str] = mapped_column(
@@ -37,6 +41,7 @@ class User(BaseModel, LoginUserMixin):
         unique=True,
         index=True,
         nullable=False,
+        comment='名称',
     )
 
     avatar_url: Mapped[str] = mapped_column(
@@ -44,6 +49,7 @@ class User(BaseModel, LoginUserMixin):
         unique=True,
         index=True,
         nullable=False,
+        comment='头像URL',
     )
 
     def to_dict(self) -> dict:
@@ -118,10 +124,20 @@ class User(BaseModel, LoginUserMixin):
 
 
 class UserMixin:
-    user_id: Mapped[int] = mapped_column(
-        Integer,
+    user_id: Mapped[str] = mapped_column(
+        String(22),
         nullable=False,
     )
+
+    @declared_attr
+    @classmethod
+    def user(cls) -> Mapped[User]:
+        return relationship(
+            User,
+            primaryjoin=User.id == foreign(cls.user_id),
+            lazy="selectin",
+            uselist=False,
+        )
 
     def verify_owner(self, user: User):
         if self.user_id != user.id:

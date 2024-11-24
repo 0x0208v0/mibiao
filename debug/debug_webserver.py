@@ -1,6 +1,7 @@
 from mibiao.app import app
 from mibiao.models import db
 from mibiao.models.domain import Domain
+from mibiao.models.tag import Tag
 from mibiao.models.user import User
 
 
@@ -11,23 +12,26 @@ def create_test_data():
 
         user = User(email='a@a.com', name='a', avatar_url='https://www.nodeseek.com/avatar/15068.png')
         user.password = 'a'
-        db.session.add(user)
-        db.session.flush()
+
+        tag = Tag(name='全部', url_path_name='', user=user)
 
         objs = [
+            user,
+            tag,
             Domain(
-                user_id=user.id,
-                domain='a.com',
+                user=user,
+                name='a.com',
                 description='这是一额米，现价100，续费100，赶紧买',
+                tags=[tag],
             ),
             Domain(
-                user_id=user.id,
-                domain='b.com',
+                user=user,
+                name='b.com',
                 description='这是一额米',
             ),
             Domain(
-                user_id=user.id,
-                domain='c.com',
+                user=user,
+                name='c.com',
             ),
         ]
         db.session.add_all(objs)

@@ -100,7 +100,7 @@
   >
   </script>
 
-  {% include 'request.html' %}
+  <script src="{{ url_for('static', filename='js/api.js') }}"></script>
 
   <script>
     const {defineStore} = Pinia;
@@ -134,6 +134,7 @@
 
   {% include 'admin/me.html' %}
   {% include 'admin/site.html' %}
+  {% include 'admin/tag.html' %}
   {% include 'admin/domain.html' %}
 
   <script>

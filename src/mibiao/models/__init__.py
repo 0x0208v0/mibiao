@@ -7,6 +7,7 @@ from flask import Flask
 from mibiao.models.base import db
 from mibiao.models.config import Config
 from mibiao.models.domain import Domain
+from mibiao.models.tag import Tag
 from mibiao.models.user import User
 
 

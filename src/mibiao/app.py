@@ -19,6 +19,7 @@ from mibiao.models.config import load_config_by_user
 from mibiao.models.tag import Tag
 from mibiao.models.user import User
 from mibiao.settings import settings
+from mibiao.utils.markdown import markdown_to_html as _markdown_to_html
 
 logging.basicConfig(format=settings.LOGGING_FORMAT, level=settings.LOGGING_LEVEL)
 logger = logging.getLogger(__name__)
@@ -53,20 +54,27 @@ register_blueprints(app)
 
 
 @app.context_processor
-def inject_user_config():
-    return dict(config=load_config_by_user(User.get_one()))
-
-
-@app.context_processor
-def inject_tag_list():
+def context_processor():
+    user = User.get_one()
+    config = load_config_by_user(User.get_one())
     tag_list = Tag.get_list(
         Tag.is_hide == False,
         order_by=[
             Tag.rank,
             Tag.id.desc(),
         ],
+        user=user,
     )
-    return {'tag_list': tag_list}
+    return {
+        'user': user,
+        'config': config,
+        'tag_list': tag_list,
+    }
+
+
+@app.template_filter('markdown_to_html')
+def markdown_to_html(s):
+    return _markdown_to_html(s)
 
 
 with app.app_context():

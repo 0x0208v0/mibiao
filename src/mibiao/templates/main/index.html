@@ -35,42 +35,85 @@
           padding: 8px 16px;
           min-height: 58px;
       }
+
+      .avatar {
+          border-radius: 15%;
+          box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+          height: 40px;
+          width: 40px;
+      }
+
+      .description {
+          background-color: #ffffda;
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+          border-radius: 5px;
+          padding: 10px;
+          color: #333;
+          margin: 1rem 0;
+      }
   </style>
 {% endblock %}
 
 
 {% block content %}
-  <div class="domain-list">
-    <ul class="flex flex-col p-0">
-      {% for domain in domain_list %}
-        <li class="domain-list-item text-pretty relative">
-          <div class="text-[14px] font-[700] text-[#555]">
-            <a href="{{ domain.url or '' }}">{{ domain.name }}</a>
-          </div>
-          <div class="text-[12px] text-[#858585] border-gray-300">
-            {% if domain.description %}
-              <span> {{ domain.description or '' }}</span>
-            {% endif %}
-            {% if domain.selling_price %}
-              <span>售价：{{ domain.selling_price }}</span>
-            {% endif %}
-            {% if domain.renewal_price %}
-              <span>续费：{{ domain.renewal_price }}</span>
-            {% endif %}
-            {% if domain.transaction_method %}
-              <span>交易方式：{{ domain.transaction_method }}</span>
-            {% endif %}
-          </div>
-          <div class="flex absolute absolute bottom-[8px] right-[13px]">
-            <div class="justify-end flex flex-1 ml-[30px]">
-              {% for tag in domain.tags %}
-                <a class="tag" href="{{ tag.tag_url }}"> {{ tag.name }}</a>
-              {% endfor %}
+  <div class="domain-list flex">
+    <div class="flex-1">
+      <ul class="flex flex-col p-0">
+        {% for domain in domain_list %}
+          <li class="domain-list-item text-pretty relative flex">
+            <div class="mr-[10px] min-w-[40px] min-h-[40px]">
+              <img class="avatar" src="https://photo.china.wf/logo/domain/bmFtZQ.png">
+            </div>
+            <div>
+              <div class="text-[14px] font-[700] text-[#555]">
+                <a href="{{ domain.url or '' }}">{{ domain.name }}</a>
+              </div>
+              <div class="text-[12px] text-[#858585] border-gray-300 mb-[10px]">
+                {% if domain.description %}
+                  <span> {{ domain.description or '' }}</span>
+                {% endif %}
+                {% if domain.selling_price %}
+                  <span>售价：{{ domain.selling_price }}</span>
+                {% endif %}
+                {% if domain.renewal_price %}
+                  <span>续费：{{ domain.renewal_price }}</span>
+                {% endif %}
+                {% if domain.transaction_method %}
+                  <span>交易方式：{{ domain.transaction_method }}</span>
+                {% endif %}
+              </div>
+              <div class="flex absolute absolute bottom-[8px] right-[13px]">
+                <div class="justify-end flex flex-1 ml-[30px]">
+                  {% for tag in domain.tags %}
+                    <a class="tag" href="{{ tag.tag_url }}"> {{ tag.name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <div class="h-[20px]"></div>
+    </div>
+    <div class="ml-[20px] w-[200px]">
+      <div class="flex">
+        <div>
+          <img class="avatar" src="{{ user.avatar_url }}" alt="avatar">
+        </div>
+        <div class="flex flex-col ml-[16px]">
+          <div class="text-[16px] text-[#555]">{{ user.name }}</div>
+          <div class="flex">
+            <div>
+              <img src="{{ url_for('static', filename='setting-two.svg') }}" width="16" height="16" alt="icon"/>
+            </div>
+            <div class="ml-[6px]">
+              <img src="{{ url_for('static', filename='logout.svg') }}" width="16" height="16" alt="icon"/>
             </div>
           </div>
-        </li>
-      {% endfor %}
-    </ul>
-    <div class="h-[20px]"></div>
+        </div>
+      </div>
+
+      <div class="description">{{ user.comment | markdown_to_html | safe }}</div>
+    </div>
   </div>
 {% endblock %}

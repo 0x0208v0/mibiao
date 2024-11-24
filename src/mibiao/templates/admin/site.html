@@ -23,7 +23,6 @@
   </div>
 </script>
 
-
 <script>
   async function getConfig() {
     return await sendHttpGet('/api/configs');
@@ -37,7 +36,7 @@
 <script>
   const site_component = {
     template: `#site`,
-    delimiters: ["@{", "}"],
+    delimiters: ['@{', '}'],
     setup() {
       const form = reactive({
         site_title: '',
@@ -45,11 +44,10 @@
         site_brand: '',
         site_beta: '',
         site_copyright: '',
-      })
+      });
 
       onMounted(async () => {
-        const response = await getConfig();
-        const {config} = await response.json();
+        const {config} = await getConfig();
         form.site_title = config['site_title'];
         form.site_icon_url = config['site_icon_url'];
         form.site_brand = config['site_brand'];
@@ -68,6 +66,6 @@
     path: '/site',
     name: 'site',
     title: '网站设置',
-    component: site_component
+    component: site_component,
   });
 </script>

@@ -11,7 +11,6 @@
   </div>
 </script>
 
-
 <script>
   async function getMyInfo() {
     return await sendHttpGet('/api/users/me');
@@ -21,19 +20,17 @@
 <script>
   const me_component = {
     template: `#me`,
-    delimiters: ["@{", "}"],
+    delimiters: ['@{', '}'],
     setup() {
       const form = reactive({
         email: '',
         display_created_at: '',
-      })
+      });
 
       onMounted(async () => {
-        const response = await getMyInfo();
-        const {info} = await response.json();
+        const {info} = await getMyInfo();
         form.email = info['email'];
         form.display_created_at = info['display_created_at'];
-
       });
 
       async function onSubmit() {
@@ -47,6 +44,6 @@
     path: '/me',
     name: 'me',
     title: '我的信息',
-    component: me_component
+    component: me_component,
   });
 </script>

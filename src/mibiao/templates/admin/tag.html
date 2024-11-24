@@ -1,6 +1,6 @@
 <script id="tag" type="text/x-template">
   <div>
-    <el-button class="mb-1" @click="handleCreate">添加标签</el-button>
+    <el-button type="primary" class="mb-1" @click="handleCreate">添加标签</el-button>
     <el-table :data="tableData" style="width: 100%" height="666">
       <el-table-column fixed prop="name" label="标签" width="150"></el-table-column>
       <el-table-column prop="url_path_name" label="URL路径名" width="150"></el-table-column>
@@ -76,6 +76,9 @@
         <el-form-item label="标签">
           <el-input v-model="deleteFormData.name"/>
         </el-form-item>
+        <el-form-item label="URL路径名">
+          <el-input v-model="deleteFormData.url_path_name" placeholder="example.com"/>
+        </el-form-item>
         <el-form-item label="是否隐藏">
           <el-switch v-model="deleteFormData.is_hide"/>
         </el-form-item>
@@ -94,27 +97,22 @@
   </div>
 </script>
 
-
 <script>
   const tag_component = {
     template: `#tag`,
-    delimiters: ["@{", "}"],
+    delimiters: ['@{', '}'],
     setup() {
-
       onMounted(async () => {
         await refreshTableData();
       });
-
 
       /* 列表 */
       const tableData = ref([]);
 
       async function refreshTableData() {
-        const response = await getTagList();
-        const {tag_list} = await response.json();
+        const {tag_list} = await getTagList();
         tableData.value = tag_list;
       }
-
 
       /* 新增 */
       const createFormData = ref({
@@ -142,10 +140,9 @@
       async function handleCreateDialogSubmit() {
         await createTag(JSON.stringify({tag: createFormData.value}));
         await refreshTableData();
-        ElMessage({message: '已新增！', type: 'success'})
+        ElMessage({message: '已新增！', type: 'success'});
         await handleCreateDialogCancel();
       }
-
 
       /* 编辑 */
       const editFormData = ref({
@@ -173,12 +170,14 @@
       }
 
       async function handleEditDialogSubmit() {
-        await updateTag(editFormData.value.id, JSON.stringify({tag: editFormData.value}));
+        await updateTag(
+            editFormData.value.id,
+            JSON.stringify({tag: editFormData.value})
+        );
         await refreshTableData();
         ElMessage({message: '已保存！', type: 'success'});
         await handleEditDialogCancel();
       }
-
 
       /* 删除*/
       const deleteFormData = ref({
@@ -243,6 +242,6 @@
     path: '/tag',
     name: 'tag',
     title: '标签',
-    component: tag_component
+    component: tag_component,
   });
 </script>

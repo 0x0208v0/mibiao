@@ -45,7 +45,7 @@
       {% for domain in domain_list %}
         <li class="domain-list-item text-pretty hover:text-balance">
           <div class="text-[14px] font-[700] text-[#555]">
-            <a class="m-0 p-0" href="{{ domain.url or '' }}">{{ domain.name }}</a>
+            <a href="{{ domain.url or '' }}">{{ domain.name }}</a>
           </div>
           <div class="flex justify-between">
             <div class="text-[12px] text-[#858585] border-gray-300">

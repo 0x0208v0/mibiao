@@ -25,11 +25,11 @@ class Domain(BaseModel, UserMixin):
         comment='名称',
     )
 
-    icon_url: Mapped[str] = mapped_column(
+    logo_url: Mapped[str] = mapped_column(
         Text,
         nullable=False,
         default='',
-        comment='域名图标URL',
+        comment='域名LOGO URL',
     )
 
     description: Mapped[str] = mapped_column(
@@ -117,7 +117,7 @@ class Domain(BaseModel, UserMixin):
         return {
             'id': self.id,
             'name': self.name,
-            'icon_url': self.icon_url,
+            'logo_url': self.logo_url,
             'description': self.description,
             'selling_price': self.selling_price,
             'renewal_price': self.renewal_price,

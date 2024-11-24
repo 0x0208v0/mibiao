@@ -49,7 +49,7 @@ def login():
             try:
                 user = User.login(email=form.email.data, password=form.password.data)
                 login_user(user, remember=form.remember_me.data)
-                return redirect(url_for('main.index'))
+                return redirect(url_for('admin.index'))
             except ValueError as e:
                 flash(f'{e}', 'error')
         else:
@@ -91,4 +91,11 @@ def delete():
 @blueprint.get('/api/users/me')
 @login_required
 def get_my_info():
-    return {'info': current_user.to_dict()}
+    return {'user': current_user.to_dict()}
+
+
+@blueprint.put('/api/users/me')
+@login_required
+def update_my_info():
+    current_user.update(request.json['user'])
+    return {'user': current_user.to_dict()}

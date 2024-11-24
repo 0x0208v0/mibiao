@@ -1,6 +1,6 @@
 <script id="domain" type="text/x-template">
   <div>
-    <el-button class="mb-1" @click="handleCreate">添加域名</el-button>
+    <el-button type="primary" class="mb-1" @click="handleCreate">添加域名</el-button>
     <el-table :data="tableData" style="width: 100%" height="666">
       <el-table-column fixed prop="name" label="域名" width="150"></el-table-column>
       <el-table-column prop="is_hide" label="是否隐藏" width="120">
@@ -175,13 +175,11 @@
   </div>
 </script>
 
-
 <script>
   const domain_component = {
     template: `#domain`,
-    delimiters: ["@{", "}"],
+    delimiters: ['@{', '}'],
     setup() {
-
       onMounted(async () => {
         await refreshTableData();
         await fetchTags();
@@ -190,8 +188,7 @@
       const tags = ref([]);
 
       async function fetchTags() {
-        const response = await getTagList();
-        const {tag_list} = await response.json();
+        const {tag_list} = await getTagList();
         tags.value = tag_list;
       }
 
@@ -199,11 +196,9 @@
       const tableData = ref([]);
 
       async function refreshTableData() {
-        const response = await getDomainList();
-        const {domain_list} = await response.json();
+        const {domain_list} = await getDomainList();
         tableData.value = domain_list;
       }
-
 
       /* 新增 */
       const createFormData = ref({
@@ -232,10 +227,9 @@
       async function handleCreateDialogSubmit() {
         await createDomain(JSON.stringify({domain: createFormData.value}));
         await refreshTableData();
-        ElMessage({message: '已新增！', type: 'success'})
+        ElMessage({message: '已新增！', type: 'success'});
         await handleCreateDialogCancel();
       }
-
 
       /* 编辑 */
       const editFormData = ref({
@@ -267,12 +261,14 @@
       }
 
       async function handleEditDialogSubmit() {
-        await updateDomain(editFormData.value.id, JSON.stringify({domain: editFormData.value}));
+        await updateDomain(
+            editFormData.value.id,
+            JSON.stringify({domain: editFormData.value})
+        );
         await refreshTableData();
         ElMessage({message: '已保存！', type: 'success'});
         await handleEditDialogCancel();
       }
-
 
       /* 删除*/
       const deleteFormData = ref({
@@ -342,6 +338,6 @@
     path: '/domain',
     name: 'domain',
     title: '域名管理',
-    component: domain_component
+    component: domain_component,
   });
 </script>

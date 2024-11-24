@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 
-
 {% block styles %}
   {{ super() }}
   <style>
@@ -12,7 +11,7 @@
           border: none;
           border-radius: 2px;
           bottom: 8px;
-          box-shadow: 0 0 2px rgba(0, 0, 0, .5);
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
           color: unset;
           height: 20px;
           line-height: 20px;
@@ -24,10 +23,10 @@
       .domain-list {
           background-color: #fff;
           border-radius: 1rem;
-          box-shadow: 0 3px 8px rgba(0, 0, 0, .24);
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
           box-sizing: border-box;
           padding: 25px 30px;
-          transition: background-color .5s;
+          transition: background-color 0.5s;
           margin: 20px 0 15px 0;
       }
 
@@ -37,8 +36,8 @@
           min-height: 58px;
       }
   </style>
-
 {% endblock %}
+
 
 {% block content %}
   <div class="domain-list">
@@ -62,7 +61,7 @@
               <span>交易方式：{{ domain.transaction_method }}</span>
             {% endif %}
           </div>
-          <div class="flex absolute  absolute bottom-[8px] right-[13px] ">
+          <div class="flex absolute absolute bottom-[8px] right-[13px]">
             <div class="justify-end flex flex-1 ml-[30px]">
               {% for tag in domain.tags %}
                 <a class="tag" href="{{ tag.tag_url }}"> {{ tag.name }}</a>
@@ -75,5 +74,3 @@
     <div class="h-[20px]"></div>
   </div>
 {% endblock %}
-
-

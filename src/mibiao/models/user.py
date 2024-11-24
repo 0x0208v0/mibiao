@@ -3,8 +3,10 @@ from typing import Self
 from flask_login import UserMixin as LoginUserMixin
 from sqlalchemy import Boolean
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, foreign
+from sqlalchemy import Text
+from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import foreign
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
@@ -46,6 +48,14 @@ class User(BaseModel, LoginUserMixin):
 
     avatar_url: Mapped[str] = mapped_column(
         String(256),
+        unique=True,
+        index=True,
+        nullable=False,
+        comment='头像URL',
+    )
+
+    comment: Mapped[str] = mapped_column(
+        Text,
         unique=True,
         index=True,
         nullable=False,

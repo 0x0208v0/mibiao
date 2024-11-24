@@ -123,7 +123,7 @@ class Item:
 class Config:
     __item_name_set__: set
 
-    site_title: str = Item(default_value='mibiao')
+    site_title: str = Item(default_value='DomainSeek')
 
     site_icon_url: str = Item(
         default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png'
@@ -133,7 +133,7 @@ class Config:
 
     site_beta: str = Item(default_value='beta')
 
-    site_copyright: str = Item(default_value='Copyright © 2023 - 2024 All rights Reserved')
+    site_copyright: str = Item(default_value='Copyright © 2024 - 2025 All rights Reserved')
 
     def __init__(self, user_id: int, items: list[ConfigItem] | None = None):
         self.user_id: int = user_id

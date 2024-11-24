@@ -35,6 +35,8 @@
               font-family: sans-serif;
               line-height: 1.15;
               -webkit-text-size-adjust: 100%;
+              height: 100%;
+
           }
 
           body {
@@ -47,6 +49,7 @@
               font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
               font-size: small;
               line-height: 1.5em;
+              height: 100%;
           }
 
           a {
@@ -124,9 +127,8 @@
       </div>
     </header>
 
-    <main class="flex flex-col justify-center items-center">
-      <div class="w-full max-w-[850px] mt-[20px]">
-
+    <main class="flex flex-col items-center min-h-full">
+      <div class="w-full max-w-[850px] mt-[15px]">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message  in messages %}
@@ -153,8 +155,9 @@
       </div>
     </main>
 
-    <footer>
+    <footer class="bg-[#333]">
       {% block footer %}
+        <div style="text-align: center; color: #999; padding: 5px 0;">{{ config.site_copyright }}</div>
       {% endblock %}
     </footer>
 

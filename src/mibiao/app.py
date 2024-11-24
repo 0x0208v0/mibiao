@@ -16,6 +16,7 @@ from mibiao.blueprints import register_blueprints
 from mibiao.models import db
 from mibiao.models import register_models
 from mibiao.models.config import load_config_by_user
+from mibiao.models.tag import Tag
 from mibiao.models.user import User
 from mibiao.settings import settings
 
@@ -36,7 +37,7 @@ login_manager.login_message = '访问该页面需要先登陆'
 
 
 @login_manager.user_loader
-def load_user(user_id: int):
+def load_user(user_id: str):
     return User.get(user_id)
 
 
@@ -54,6 +55,18 @@ register_blueprints(app)
 @app.context_processor
 def inject_user_config():
     return dict(config=load_config_by_user(User.get_one()))
+
+
+@app.context_processor
+def inject_tag_list():
+    tag_list = Tag.get_list(
+        Tag.is_hide == False,
+        order_by=[
+            Tag.rank,
+            Tag.id.desc(),
+        ],
+    )
+    return {'tag_list': tag_list}
 
 
 with app.app_context():

@@ -109,7 +109,7 @@
           <ul class="flex justify-center items-center ml-[15px]">
             {% for tag in tag_list %}
               <li class="flex justify-center items-center ml-[8px] mr-[8px] text-[13px] text-[#555]">
-                <a class="m-0 p-0" href="#">
+                <a class="m-0 p-0" href="{{ url_for('main.index_by_tag', url_path_name=tag.url_path_name) }}">
                   {{ tag.name }}
                 </a>
               </li>

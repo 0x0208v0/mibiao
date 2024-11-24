@@ -18,6 +18,7 @@
           line-height: 20px;
           padding: 0 4px;
           margin-left: 5px;
+          word-break: keep-all;
       }
 
       .domain-list {
@@ -43,15 +44,26 @@
   <div class="domain-list">
     <ul class="flex flex-col p-0">
       {% for domain in domain_list %}
-        <li class="domain-list-item text-pretty hover:text-balance">
+        <li class="domain-list-item text-pretty relative">
           <div class="text-[14px] font-[700] text-[#555]">
             <a href="{{ domain.url or '' }}">{{ domain.name }}</a>
           </div>
-          <div class="flex justify-between">
-            <div class="text-[12px] text-[#858585] border-gray-300">
-              {{ domain.description or '' }}
-            </div>
-            <div class="flex">
+          <div class="text-[12px] text-[#858585] border-gray-300">
+            {% if domain.description %}
+              <span> {{ domain.description or '' }}</span>
+            {% endif %}
+            {% if domain.selling_price %}
+              <span>售价：{{ domain.selling_price }}</span>
+            {% endif %}
+            {% if domain.renewal_price %}
+              <span>续费：{{ domain.renewal_price }}</span>
+            {% endif %}
+            {% if domain.transaction_method %}
+              <span>交易方式：{{ domain.transaction_method }}</span>
+            {% endif %}
+          </div>
+          <div class="flex absolute  absolute bottom-[8px] right-[13px] ">
+            <div class="justify-end flex flex-1 ml-[30px]">
               {% for tag in domain.tags %}
                 <a class="tag" href="{{ tag.tag_url }}"> {{ tag.name }}</a>
               {% endfor %}

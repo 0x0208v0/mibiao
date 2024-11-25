@@ -1,0 +1,124 @@
+html {
+    font-family: sans-serif;
+    line-height: 1.15;
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+
+}
+
+body {
+    margin: 0;
+    background-image: linear-gradient(#d4d4d4 1px, transparent 0), linear-gradient(90deg, #d4d4d4 1px, transparent 0);
+    background-size: 32px 32px;
+    background-color: #fffcf8;
+
+    border: 0;
+    font-family: -apple-system, BlinkMacSystemFont, Helvetica Neue, PingFang SC, Microsoft YaHei, Source Han Sans SC, Noto Sans CJK SC, WenQuanYi Micro Hei, sans-serif;
+    font-size: small;
+    line-height: 1.5em;
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: #555;
+}
+
+a:hover {
+    color: #333;
+}
+
+.header {
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+    transition: background-color .5s;
+}
+
+.navbar {
+    padding: 0;
+    display: flex;
+    width: 1080px;
+    margin: auto;
+    height: 40px;
+}
+
+.navbar .brand {
+    display: flex;
+    align-items: center;
+    color: #555;
+}
+
+.brand .logo {
+    max-width: 36px;
+}
+
+.brand .title {
+    margin-left: 5px;
+    font-family: helvetica neue, helvetica, arial, sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.beta {
+    color: #ccc;
+    font-size: 11px;
+    font-weight: 400;
+    position: relative;
+    top: -12px;
+}
+
+
+.tag {
+    min-width: 31px;
+    font-size: 11px;
+    text-decoration: none;
+    background: #fbfbfb;
+    border: none;
+    border-radius: 2px;
+    bottom: 8px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    color: unset;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 4px;
+    margin-left: 5px;
+    word-break: keep-all;
+}
+
+.domain-list {
+    background-color: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+    box-sizing: border-box;
+    padding: 25px 30px;
+    transition: background-color 0.5s;
+    margin: 15px 0 15px 0;
+}
+
+.domain-list-item {
+    border-bottom: 1px solid #dee2e6;
+    padding: 8px 16px;
+    min-height: 58px;
+}
+
+.avatar {
+    border-radius: 15%;
+    box-shadow: 0 0 3px rgba(0, 0, 0, .1);
+    height: 40px;
+    width: 40px;
+}
+
+.description {
+    background-color: #ffffda;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    padding: 10px;
+    color: #333;
+    margin: 1rem 0;
+}
+
+.copyright {
+    text-align: center;
+    color: #999;
+    padding: 5px 0;
+}

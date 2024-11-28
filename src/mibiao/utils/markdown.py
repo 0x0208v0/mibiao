@@ -1,5 +1,3 @@
-import functools
-
 import mistune
 from mistune import HTMLRenderer
 from mistune import safe_entity
@@ -13,11 +11,6 @@ class MyRenderer(HTMLRenderer):
         return s + '>' + text + '</a>'
 
 
-@functools.lru_cache(maxsize=32)
 def markdown_to_html(text: str) -> str:
     markdown = mistune.create_markdown(renderer=MyRenderer())
     return markdown(text)
-
-
-if __name__ == '__main__':
-    print(markdown_to_html('''[example](http://example.com)'''))

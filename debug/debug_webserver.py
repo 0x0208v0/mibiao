@@ -14,7 +14,7 @@ def create_test_data():
             email='a@a.com',
             name='0x0208v0',
             avatar_url='https://www.nodeseek.com/avatar/15068.png',
-            comment='''
+            comment="""
 WX：MHgwMjA4djA=
 
 QQ：1234567810
@@ -23,7 +23,7 @@ TG：YXNkZmFzZGY=
 
 [Github](https://github.com/0x0208v0) 
 
-            '''.strip()
+            """.strip(),
         )
         user.password = 'a'
 

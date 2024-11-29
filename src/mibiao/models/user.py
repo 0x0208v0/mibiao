@@ -147,7 +147,7 @@ class UserMixin:
         return relationship(
             User,
             primaryjoin=User.id == foreign(cls.user_id),
-            lazy="selectin",
+            lazy='selectin',
             uselist=False,
         )
 

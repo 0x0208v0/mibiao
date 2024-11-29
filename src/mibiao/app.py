@@ -28,7 +28,7 @@ app = Flask(__name__, instance_path=os.getcwd())
 app.config.update(settings.to_dict())
 
 app.json.ensure_ascii = False
-app.json.mimetype = "application/json; charset=utf-8"
+app.json.mimetype = 'application/json; charset=utf-8'
 
 Compress(app)
 
@@ -82,7 +82,7 @@ with app.app_context():
 
     env_file_path = pathlib.Path('.env')
     if not env_file_path.exists():
-        with FileLock(".env.lock") as lock:
+        with FileLock('.env.lock') as lock:
             if not env_file_path.exists():
                 with open('.env', 'w+') as f:
                     secret_key = secrets.token_hex(16)

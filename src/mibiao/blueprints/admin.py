@@ -9,5 +9,5 @@ blueprint = Blueprint('admin', __name__)
 @login_required
 def index():
     return render_template(
-        'admin/index.html',
+        'admin/index.html.j2',
     )

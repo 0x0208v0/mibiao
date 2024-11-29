@@ -94,7 +94,6 @@ class ConfigItem(BaseModel, UserMixin):
 
 
 class Item:
-
     def __init__(self, name: str | None = None, default_value=None):
         self.name = name
         self.default_value = default_value
@@ -125,9 +124,7 @@ class Config:
 
     site_title: str = Item(default_value='DomainSeek')
 
-    site_icon_url: str = Item(
-        default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png'
-    )
+    site_icon_url: str = Item(default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png')
 
     site_brand: str = Item(default_value='DomainSeek')
 

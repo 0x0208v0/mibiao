@@ -22,7 +22,7 @@ class BaseForm(FlaskForm):
     def flash_errors(self):
         for field, errors in self.errors.items():
             for error in errors:
-                flash(f"{getattr(self, field).label.text}: {error}", 'error')
+                flash(f'{getattr(self, field).label.text}: {error}', 'error')
 
 
 class LoginForm(BaseForm):
@@ -54,7 +54,7 @@ def login():
                 flash(f'{e}', 'error')
         else:
             form.flash_errors()
-    return render_template('user/login.html', form=form)
+    return render_template('user/login.html.j2', form=form)
 
 
 @blueprint.route('/register', methods=['GET', 'POST'])
@@ -70,7 +70,7 @@ def register():
                 flash(f'{e}', 'error')
         else:
             form.flash_errors()
-    return render_template('user/register.html', form=form)
+    return render_template('user/register.html.j2', form=form)
 
 
 @blueprint.route('/logout', methods=['GET', 'POST'])

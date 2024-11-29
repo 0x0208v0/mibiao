@@ -1,0 +1,203 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<div id="app" class="flex">
+  <el-container>
+    <el-aside width="200px">
+      <el-menu :default-active="activeIndex" @select="handleSelect" router>
+        <el-menu-item v-for="(item, index) in routes.slice(1)" :index="item.path" :route="{name: item.name}">
+          @{item.title}
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
+  </el-container>
+</div>
+{% endblock content %}
+
+{% block styles %}
+{{ super() }}
+<!-- element-plus -->
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/index.min.css"
+  integrity="sha512-r5oxEDAlj7jwk5RhxKxszBFjYQPOitY2sq8s+W4qxcgB8CZYafomy+TBHEC1L4jSQQAGkUzJlMgA2jv0T1sNgA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/theme-chalk/index.min.css"
+  integrity="sha512-r5oxEDAlj7jwk5RhxKxszBFjYQPOitY2sq8s+W4qxcgB8CZYafomy+TBHEC1L4jSQQAGkUzJlMgA2jv0T1sNgA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/theme-chalk/el-icon.min.css"
+  integrity="sha512-EPjt77BiTdoqWPIYJRZpB5NX+mv6TMQYMyNs/dQSLvlzL0VHYSnJv00tNysRSDo70Auaw4jmgEM84TdahCVwsw=="
+  crossorigin="anonymous" referrerpolicy="no-referrer" />
+{% endblock styles %}
+
+{% block scripts %}
+{{ super() }}
+<!-- vue -->
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.5.13/vue.global.prod.min.js"
+  integrity="sha512-66fV4MXSQdGN0KQxZ0Bw627HalhTQYQbOoF24EtMXN2FaAoKMgAZ7nDi77d9xWwrRjEEUfE+7rxjTt+cA2IuJA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- vue-router -->
+<script src="https://s4.zstatic.net/ajax/libs/vue-router/4.4.5/vue-router.global.prod.min.js"
+  integrity="sha512-p/NZFNVGoSeQ/D8zHTcdjgoZHrpvqi2GOepWI8HQyuJqry/HVcLvdPesvaQlu0k1foYdjdmFB9H+C0MwJYEkfg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- vue-demi -->
+<script src="https://s4.zstatic.net/ajax/libs/vue-demi/0.14.10/index.iife.min.js"
+  integrity="sha512-WlWfdPbyuYoflob4Dj7iU5tJ+ZAVNKYJwmxeFObn70TrhtcBgf9hl59hwV1+22uaZKF3u2+M8J+60lMtekJFvA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- pinia -->
+<script src="https://s4.zstatic.net/ajax/libs/pinia/2.2.6/pinia.iife.prod.min.js"
+  integrity="sha512-2zl+gQrXtb+//CCFRVbzNWr5U2bIXrR231yrsuR99pFCxCY9pEuu1sQVyWsYmpaS32789EesiAyFNZX5Sr0Qeg=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- element-plus -->
+<script src="https://s4.zstatic.net/ajax/libs/element-plus/2.8.8/index.full.min.js"
+  integrity="sha512-u7rN9ugWES+cwhSXacu0roDM+Dn7jWv4DzQ42NXoBcn58e/VTMUIQ5NKIrEiSPbDF2hdbt4E9+0/ANPVaH+tMA=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- element-plus-icons-vue -->
+<script src="https://s4.zstatic.net/ajax/libs/element-plus-icons-vue/2.3.1/index.iife.min.js"
+  integrity="sha512-F2sV0V7qeAmq6FfnxL1WrmueAprl0Um6wJgZ2S4iDfcCxhKXI89cxegixmrX4LB+epMApTxZ1jItY4RX7Tje/w=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--lodash-->
+<script src="https://s4.zstatic.net/ajax/libs/lodash.js/4.17.21/lodash.min.js"
+  integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--dayjs-->
+<script src="https://s4.zstatic.net/ajax/libs/dayjs/1.11.13/dayjs.min.js"
+  integrity="sha512-FwNWaxyfy2XlEINoSnZh1JQ5TRRtGow0D6XcmAWmYCRgvqOUTnzCxPc9uF35u5ZEpirk1uhlPVA19tflhvnW1g=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="{{ url_for('static', filename='js/api.js') }}"></script>
+
+<script>
+  const {
+    defineStore
+  } = Pinia;
+  const useCounterStore = defineStore('counter', {
+    state() {
+      return {
+        value: 0,
+      };
+    },
+    actions: {
+      increment(state) {
+        console.log(state);
+        this.value++;
+        ElMessage.error('hello');
+      },
+    },
+  });
+</script>
+
+<script>
+  const routes = [{
+    path: '/',
+    redirect: '/me'
+  }];
+</script>
+
+<script>
+  const {
+    ref,
+    reactive,
+    computed,
+    watch,
+    onMounted,
+    createApp
+  } = Vue;
+  const {
+    useRoute,
+    useRouter,
+    onBeforeRouteUpdate,
+    createRouter,
+    createWebHashHistory,
+  } = VueRouter;
+  const {
+    createPinia
+  } = Pinia;
+</script>
+
+{% include "admin/me.html.j2" %}
+
+{% include "admin/site.html.j2" %}
+
+{% include "admin/tag.html.j2" %}
+
+{% include "admin/domain.html.j2" %}
+
+<script>
+  const App = {
+    delimiters: ['@{', '}'],
+    components: {},
+    setup() {
+      const counter = useCounterStore();
+      const activeIndex = ref('/site');
+      const route = useRoute();
+      const router = useRouter();
+
+      watch(
+        () => router.currentRoute,
+        (val) => {
+          activeIndex.value = route.path;
+          console.log('watch', val.value, route.path);
+        }, {
+        immediate: true,
+        deep: true,
+      }
+      );
+
+      onBeforeRouteUpdate(async (to, from) => {
+        console.log('onBeforeRouteUpdate', to, from);
+      });
+
+      function handleClick() {
+        counter.increment();
+        console.log(counter.value);
+      }
+
+      function handleSelect(index) {
+        console.log('handleSelect', index);
+        activeIndex.value = index;
+      }
+
+      return {
+        routes,
+        activeIndex,
+        handleClick,
+        handleSelect,
+      };
+    },
+  };
+</script>
+
+<script>
+  const app = createApp(App);
+  const router = createRouter({
+    history: createWebHashHistory(),
+    routes: routes,
+  });
+  router.beforeEach((to, from) => {
+    console.log('beforeEach', to, from);
+    return true;
+  });
+  const pinia = createPinia();
+
+  app.use(router);
+  app.use(pinia);
+  app.use(ElementPlus);
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component);
+  }
+
+  app.mount('#app');
+</script>
+
+{% endblock scripts %}

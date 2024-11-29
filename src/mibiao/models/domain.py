@@ -85,7 +85,11 @@ class Domain(BaseModel, UserMixin):
 
     @classmethod
     def create(
-            cls, data: dict, *, user: User | None = None, commit: bool = True,
+        cls,
+        data: dict,
+        *,
+        user: User | None = None,
+        commit: bool = True,
     ) -> Self:
         data['tags'] = Tag.get_list_by_ids(data.pop('tag_ids'))
         return super().create(data=data, user=user, commit=commit)
@@ -103,8 +107,7 @@ class Domain(BaseModel, UserMixin):
 
     def remove_tags(self, tag_ids: list[str], commit: bool = True):
         self.session.execute(
-            delete(DomainTag)
-            .where(
+            delete(DomainTag).where(
                 DomainTag.domain_id == self.id,
                 DomainTag.tag_id.in_(tag_ids),
             )

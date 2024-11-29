@@ -70,6 +70,4 @@ class DomainTag(BaseModel):
         nullable=False,
     )
 
-    __table_args__ = (
-        UniqueConstraint(tag_id, domain_id),
-    )
+    __table_args__ = (UniqueConstraint(tag_id, domain_id),)

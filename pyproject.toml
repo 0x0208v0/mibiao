@@ -38,3 +38,28 @@ include = ['*']
 
 [tool.setuptools.package-data]
 '*' = ['*.*']
+
+[tool.black]
+target-version = ["py312"]
+line-length = 120
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+
+[tool.ruff.lint]
+ignore = ["E402"]
+
+[tool.ruff.format]
+quote-style = "single"
+
+[tool.ruff.lint.isort]
+force-single-line = true
+case-sensitive = true
+order-by-type = true
+
+[tool.ruff.lint.extend-per-file-ignores]
+'*' = ['E402']
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"

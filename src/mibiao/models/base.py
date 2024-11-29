@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime
-from typing import Self
 from typing import TYPE_CHECKING
+from typing import Self
 
 import pendulum
 import shortuuid
@@ -68,7 +68,11 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def create(
-            cls, data: dict, *, user: User | None = None, commit: bool = True,
+        cls,
+        data: dict,
+        *,
+        user: User | None = None,
+        commit: bool = True,
     ) -> Self:
         obj = cls(**data)
         if user:
@@ -106,10 +110,7 @@ class SqlalchemyBaseModel(DeclarativeBase):
             db.session.commit()
 
     def to_dict(self) -> dict:
-        return {
-            column.name: getattr(self, column.name, None)
-            for column in getattr(self, '__table__').columns
-        }
+        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
 
     def to_json(self, decoder_cls=None) -> str:
         return json.dumps(self.to_dict(), cls=decoder_cls or JsonEncoder)
@@ -155,12 +156,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def build_query(
-            cls,
-            *where,
-            order_by: list | None = None,
-            offset: int | None = None,
-            limit: int | None = None,
-            user: User | None = None,
+        cls,
+        *where,
+        order_by: list | None = None,
+        offset: int | None = None,
+        limit: int | None = None,
+        user: User | None = None,
     ) -> Select:
         query = select(cls)
         extra_filters = []
@@ -186,12 +187,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def get_list(
-            cls,
-            *where,
-            order_by: list | None = None,
-            offset: int | None = None,
-            limit: int | None = None,
-            user: User | None = None,
+        cls,
+        *where,
+        order_by: list | None = None,
+        offset: int | None = None,
+        limit: int | None = None,
+        user: User | None = None,
     ) -> list[Self]:
         query = cls.build_query(
             *where,
@@ -211,12 +212,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def get_list_by_page(
-            cls,
-            *where,
-            order_by: list | None = None,
-            page_num: int = 1,
-            page_size: int = 20,
-            user: User | None = None,
+        cls,
+        *where,
+        order_by: list | None = None,
+        page_num: int = 1,
+        page_size: int = 20,
+        user: User | None = None,
     ) -> list[Self]:
         if not order_by:
             order_by = [cls.id]

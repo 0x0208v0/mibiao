@@ -23,7 +23,6 @@
   </div>
 </script>
 
-
 <script>
   const site_component = {
     template: `#site`,
@@ -38,7 +37,9 @@
       });
 
       onMounted(async () => {
-        const {config} = await getConfig();
+        const {
+          config
+        } = await getConfig();
         formData.site_title = config['site_title'];
         formData.site_icon_url = config['site_icon_url'];
         formData.site_brand = config['site_brand'];
@@ -47,11 +48,19 @@
       });
 
       async function handleSubmit() {
-        await saveConfig(JSON.stringify({config: formData}));
-        ElMessage({message: '已保存！', type: 'success'});
+        await saveConfig(JSON.stringify({
+          config: formData
+        }));
+        ElMessage({
+          message: '已保存！',
+          type: 'success'
+        });
       }
 
-      return {formData, handleSubmit};
+      return {
+        formData,
+        handleSubmit
+      };
     },
   };
 

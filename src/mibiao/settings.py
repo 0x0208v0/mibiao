@@ -23,9 +23,7 @@ class Settings:
 
 def load_settings(env: str = '.env') -> Settings | None:
     if not load_dotenv(env):
-        warnings.warn(
-            f'{env} not found, using default config, current working directory: {os.getcwd()}'
-        )
+        warnings.warn(f'{env} not found, using default config, current working directory: {os.getcwd()}')
 
     return Settings(
         LOGGING_LEVEL=os.environ.get('LOGGING_LEVEL', 'INFO'),
@@ -34,12 +32,8 @@ def load_settings(env: str = '.env') -> Settings | None:
             '[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
         ),
         SECRET_KEY=os.environ.get('SECRET_KEY', 'mibiao'),
-        PERMANENT_SESSION_LIFETIME_MINUTES=int(
-            os.environ.get('PERMANENT_SESSION_LIFETIME_MINUTES', 10)
-        ),
-        SQLALCHEMY_DATABASE_URI=os.environ.get(
-            'SQLALCHEMY_DATABASE_URI', 'sqlite:///db.sqlite3'
-        ),
+        PERMANENT_SESSION_LIFETIME_MINUTES=int(os.environ.get('PERMANENT_SESSION_LIFETIME_MINUTES', 10)),
+        SQLALCHEMY_DATABASE_URI=os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///db.sqlite3'),
         SQLALCHEMY_ECHO=os.environ.get('SQLALCHEMY_ECHO', False),
     )
 

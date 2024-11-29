@@ -2,7 +2,8 @@ from flask import Blueprint
 from flask import render_template
 
 from mibiao.models.domain import Domain
-from mibiao.models.tag import Tag, DomainTag
+from mibiao.models.tag import DomainTag
+from mibiao.models.tag import Tag
 
 blueprint = Blueprint('main', __name__, url_prefix='/')
 
@@ -15,14 +16,14 @@ def health():
 @blueprint.get('/')
 def index():
     domain_list = Domain.get_list(
-        Domain.is_hide == False,
+        Domain.is_hide.op('==')(False),
         order_by=[
             Domain.rank,
             Domain.id.desc(),
         ],
     )
     return render_template(
-        'main/index.html',
+        'main/index.html.j2',
         domain_list=domain_list,
     )
 
@@ -34,7 +35,7 @@ def index_by_tag(url_path_name: str):
         domain_list = Domain.get_list(
             DomainTag.domain_id == Domain.id,
             DomainTag.tag_id == tag.id,
-            Domain.is_hide == False,
+            Domain.is_hide.op('==')(False),
             order_by=[
                 Domain.rank,
                 Domain.id.desc(),
@@ -43,6 +44,6 @@ def index_by_tag(url_path_name: str):
     else:
         domain_list = []
     return render_template(
-        'main/index.html',
+        'main/index.html.j2',
         domain_list=domain_list,
     )

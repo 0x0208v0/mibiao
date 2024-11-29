@@ -110,7 +110,7 @@
       const tableData = ref([]);
 
       async function refreshTableData() {
-        const {tag_list} = await getTagList();
+        const { tag_list } = await getTagList();
         tableData.value = tag_list;
       }
 
@@ -138,9 +138,9 @@
       }
 
       async function handleCreateDialogSubmit() {
-        await createTag(JSON.stringify({tag: createFormData.value}));
+        await createTag(JSON.stringify({ tag: createFormData.value }));
         await refreshTableData();
-        ElMessage({message: '已新增！', type: 'success'});
+        ElMessage({ message: '已新增！', type: 'success' });
         await handleCreateDialogCancel();
       }
 
@@ -171,11 +171,11 @@
 
       async function handleEditDialogSubmit() {
         await updateTag(
-            editFormData.value.id,
-            JSON.stringify({tag: editFormData.value})
+          editFormData.value.id,
+          JSON.stringify({ tag: editFormData.value })
         );
         await refreshTableData();
-        ElMessage({message: '已保存！', type: 'success'});
+        ElMessage({ message: '已保存！', type: 'success' });
         await handleEditDialogCancel();
       }
 
@@ -207,7 +207,7 @@
       async function handleDeleteDialogSubmit() {
         await deleteTag(deleteFormData.value.id);
         await refreshTableData();
-        ElMessage({message: '删除成功！', type: 'success'});
+        ElMessage({ message: '删除成功！', type: 'success' });
         await handleDeleteDialogCancel();
       }
 

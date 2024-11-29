@@ -1,4 +1,4 @@
-const {ElMessage} = ElementPlus;
+const { ElMessage } = ElementPlus;
 
 async function checkResponseDataOkOrError(status, data) {
   if (data && data.err && status !== 401) {
@@ -37,9 +37,10 @@ function getToken() {
 
 async function sendHttpRequest(method, url, data, options) {
   const headers = {
-    Authorization: `Bearer ${getToken()}`, 'content-type': 'application/json',
+    Authorization: `Bearer ${getToken()}`,
+    'content-type': 'application/json',
   };
-  const defaultOptions = {method, headers};
+  const defaultOptions = { method, headers };
   if (method === 'GET') {
     defaultOptions.query = data || {};
   } else {
@@ -73,7 +74,6 @@ async function sendHttpForm(url, formData, options) {
   return await sendHttpRequest('POST', url, formData, options);
 }
 
-
 /* 标签 */
 async function getTagList() {
   return await sendHttpGet('/api/tags');
@@ -90,7 +90,6 @@ async function updateTag(tag_id, data) {
 async function deleteTag(tag_id) {
   return await sendHttpDelete(`/api/tags/${tag_id}`);
 }
-
 
 /* 域名 */
 async function getDomainList() {
@@ -109,7 +108,6 @@ async function deleteDomain(domain_id) {
   return await sendHttpDelete(`/api/domains/${domain_id}`);
 }
 
-
 /* 配置 */
 async function getConfig() {
   return await sendHttpGet('/api/configs');
@@ -118,7 +116,6 @@ async function getConfig() {
 async function saveConfig(data) {
   return await sendHttpPost('/api/configs', data);
 }
-
 
 /* 用户信息 */
 async function getMyInfo() {

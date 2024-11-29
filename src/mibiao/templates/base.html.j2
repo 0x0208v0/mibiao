@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN" {% block html_attribs %}{% endblock html_attribs %}>
+{% block html %}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clifford: '#da373d',
+          }
+        }
+      }
+    }
+  </script>
+
+  {% block google_tag %}
+  {% endblock google_tag %}
+
+  {#
+  图标:
+  https://www.svgrepo.com/
+  https://iconpark.oceanengine.com/official
+  #}
+  <link rel="icon"
+    href="{%- block icon -%}{{ url_for('static', filename='favicon-32x32.png') }}{%- endblock icon -%}" />
+
+  <title>
+    {% block title %}
+    {{ config.site_title }}
+    {% endblock title %}
+  </title>
+
+  {% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  {% endblock styles %}
+</head>
+
+<body {% block body_attribs %}{% endblock body_attribs %}>
+  {% block body %}
+
+  <header class="header">
+    <div class="navbar flex items-center justify-between w-full px-4 py-2 max-w-[888px]">
+      <div class="flex">
+        <a href="{{ url_for('main.index') }}" class="brand">
+          <img class="debug logo" src="{{ config.site_icon_url }}" width="36" height="36" alt="logo" />
+          <span class="debug title">{{ config.site_brand }}</span>
+          <span class="debug beta">{{ config.site_beta }}</span>
+        </a>
+        <ul class="flex justify-center items-center ml-[15px]">
+          {% for tag in tag_list %}
+          <li class="flex justify-center items-center ml-[8px] mr-[8px] text-[13px] text-[#555]">
+            <a class="m-0 p-0" href="{{ url_for('main.index_by_tag', url_path_name=tag.url_path_name) }}">
+              {{ tag.name }}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex flex-col items-center min-h-full">
+    <div class="w-full max-w-[850px] mt-[30px]">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      {% if category == 'warning' %}
+      {% set alert_class = "alert-warning" %}
+      {% elif category == 'error' %}
+      {% set alert_class = "alert-danger" %}
+      {% elif category == 'info' %}
+      {% set alert_class = "alert-primary" %}
+      {% else %}
+      {% set alert_class = "alert-secondary" %}
+      {% endif %}
+      <div class="alert {{ alert_class }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+      {% block content %}
+      {% endblock content %}
+
+    </div>
+  </main>
+
+  <footer class="bg-[#333]">
+    {% block footer %}
+    <div class="copyright">{{ config.site_copyright }}</div>
+    {% endblock footer %}
+  </footer>
+
+  {% block scripts %}
+  {% endblock scripts %}
+
+  {% endblock body %}
+</body>
+{% endblock html %}
+
+</html>

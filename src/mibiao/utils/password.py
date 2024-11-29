@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 # from werkzeug.security import generate_password_hash
 
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
 def check_password_hash(hashed_password: str, plain_password: str) -> bool:

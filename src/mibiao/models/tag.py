@@ -6,10 +6,9 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 
 from mibiao.models.base import BaseModel
-from mibiao.models.user import UserMixin
 
 
-class Tag(BaseModel, UserMixin):
+class Tag(BaseModel):
     name: Mapped[str] = mapped_column(
         String(256),
         nullable=False,
@@ -70,4 +69,6 @@ class DomainTag(BaseModel):
         nullable=False,
     )
 
-    __table_args__ = (UniqueConstraint(tag_id, domain_id),)
+    __table_args__ = (
+        UniqueConstraint(tag_id, domain_id),
+    )

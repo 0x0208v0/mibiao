@@ -16,6 +16,12 @@
       <el-form-item label="Copyright">
         <el-input v-model="formData.site_copyright"/>
       </el-form-item>
+      <el-form-item label="用户头像URL">
+        <el-input v-model="formData.user_avatar_url"/>
+      </el-form-item>
+      <el-form-item label="用户备注">
+        <el-input v-model="formData.user_comment" :rows="10" type="textarea" placeholder="请输入："/>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="handleSubmit">保存</el-button>
       </el-form-item>
@@ -45,6 +51,8 @@
         formData.site_brand = config['site_brand'];
         formData.site_beta = config['site_beta'];
         formData.site_copyright = config['site_copyright'];
+        formData.user_avatar_url = config['user_avatar_url'];
+        formData.user_comment = config['user_comment'];
       });
 
       async function handleSubmit() {
@@ -67,7 +75,7 @@
   routes.push({
     path: '/site',
     name: 'site',
-    title: '网站设置',
+    title: '网站信息',
     component: site_component,
   });
 </script>

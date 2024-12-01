@@ -1,21 +1,17 @@
 from typing import Self
 
-from flask_login import UserMixin as LoginUserMixin
+from flask_login import UserMixin
 from sqlalchemy import Boolean
 from sqlalchemy import String
-from sqlalchemy import Text
 from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import declared_attr
-from sqlalchemy.orm import foreign
 from sqlalchemy.orm import mapped_column
-from sqlalchemy.orm import relationship
 
 from mibiao.models.base import BaseModel
 from mibiao.utils.password import check_password_hash
 from mibiao.utils.password import generate_password_hash
 
 
-class User(BaseModel, LoginUserMixin):
+class User(BaseModel, UserMixin):
     email: Mapped[str] = mapped_column(
         String(64),
         unique=True,
@@ -38,37 +34,11 @@ class User(BaseModel, LoginUserMixin):
         comment='是否活跃',
     )
 
-    name: Mapped[str] = mapped_column(
-        String(64),
-        unique=True,
-        index=True,
-        nullable=False,
-        comment='名称',
-    )
-
-    avatar_url: Mapped[str] = mapped_column(
-        String(256),
-        unique=True,
-        index=True,
-        nullable=False,
-        comment='头像URL',
-    )
-
-    comment: Mapped[str] = mapped_column(
-        Text,
-        unique=True,
-        index=True,
-        nullable=False,
-        comment='头像URL',
-    )
-
     def to_dict(self) -> dict:
         return {
             'id': self.id,
             'email': self.email,
             'display_created_at': self.format_created_at(tz='Asia/Shanghai'),
-            'avatar_url': self.avatar_url,
-            'comment': self.comment,
         }
 
     @property
@@ -133,28 +103,3 @@ class User(BaseModel, LoginUserMixin):
         user.password = password
         user.save(commit=commit)
         return user
-
-
-class UserMixin:
-    user_id: Mapped[str] = mapped_column(
-        String(22),
-        nullable=False,
-    )
-
-    @declared_attr
-    @classmethod
-    def user(cls) -> Mapped[User]:
-        return relationship(
-            User,
-            primaryjoin=User.id == foreign(cls.user_id),
-            lazy='selectin',
-            uselist=False,
-        )
-
-    def verify_owner(self, user: User):
-        if self.user_id != user.id:
-            raise ValueError(f'没有权限操作资源 `{self}`')
-
-
-def get_user_id(user_or_id: User | str) -> str:
-    return user_or_id if isinstance(user_or_id, str) else user_or_id.id

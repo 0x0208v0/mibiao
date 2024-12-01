@@ -29,13 +29,13 @@ class LoginForm(BaseForm):
     email = StringField('邮箱：', validators=[DataRequired(), Email()])
     password = StringField('密码：', validators=[DataRequired()])
     remember_me = BooleanField('保持登陆')
-    submit = SubmitField('登陆')
+    submit = SubmitField('登陆后台')
 
 
 class RegisterForm(BaseForm):
     email = StringField('邮箱：', validators=[DataRequired(), Email()])
     password = StringField('密码：', validators=[DataRequired()])
-    submit = SubmitField('注册')
+    submit = SubmitField('完成')
 
 
 blueprint = Blueprint('user', __name__, url_prefix='/')
@@ -59,6 +59,9 @@ def login():
 
 @blueprint.route('/register', methods=['GET', 'POST'])
 def register():
+    if User.get_one():
+        return redirect(url_for('main.index'))
+
     form = RegisterForm()
     if request.method == 'POST':
         if form.validate_on_submit():
@@ -80,22 +83,7 @@ def logout():
     return redirect(url_for('main.index'))
 
 
-@blueprint.route('/delete', methods=['GET', 'POST'])
-@login_required
-def delete():
-    current_user.delete()
-    flash('账户已删除', 'success')
-    return redirect(url_for('main.index'))
-
-
 @blueprint.get('/api/users/me')
 @login_required
 def get_my_info():
-    return {'user': current_user.to_dict()}
-
-
-@blueprint.put('/api/users/me')
-@login_required
-def update_my_info():
-    current_user.update(request.json['user'])
     return {'user': current_user.to_dict()}

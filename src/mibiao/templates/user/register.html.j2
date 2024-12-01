@@ -1,26 +1,27 @@
 {% extends 'base.html.j2' %}
 
+
 {% block styles %}
   {{ super() }}
-
   <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css"
         integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"/>
 {% endblock styles %}
 
+
 {% block scripts %}
   {{ super() }}
-
   <script src="https://s4.zstatic.net/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"
           integrity="sha512-7Pi/otdlbbCR+LnW+F7PwFcSDJOuUJB3OxtEHbg4vSMvzvJjde4Po1v4BR9Gdc9aXNUNFVUY+SK51wWT8WF0Gg=="
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock scripts %}
 
+
 {% block content %}
   <div>
-    <h1>后台登陆</h1>
+    <h1>米表安装完成！请设置登录后台的邮箱和密码</h1>
     <div class="mt-4">
-      <form action="{{ url_for('user.login') }}" method="POST">
+      <form action="{{ url_for('user.register') }}" method="POST">
         <div>
           {{ form.hidden_tag() }}
         </div>
@@ -28,17 +29,11 @@
         <div class="mb-3">
           {{ form.email.label(class="form-label") }}
           {{ form.email(class="form-control") }}
-          <div id="emailHelp" class="form-text">如果忘记密码，请在命令行输入 mibiao reset-password 进行密码重置</div>
         </div>
 
         <div class="mb-3">
           {{ form.password.label(class="form-label") }}
           {{ form.password(class="form-control") }}
-        </div>
-
-        <div class="form-check mb-3">
-          {{ form.remember_me(class="form-check-input", type="checkbox") }}
-          {{ form.remember_me.label }}
         </div>
 
         <div class="mb-3">

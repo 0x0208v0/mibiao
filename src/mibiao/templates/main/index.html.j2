@@ -29,44 +29,50 @@
 {% block content %}
   <div class="domain-list flex">
     <div class="flex-1">
-      <ul class="flex flex-col p-0">
-        {% for domain in domain_list %}
-          <li class="domain-list-item text-pretty relative flex">
-            <div class="mr-[10px] min-w-[40px] min-h-[40px]">
-              {% if domain.logo_url %}
-                <img class="avatar" src="{{ domain.logo_url }}" alt="{{ domain.name }}" width="40" height="40"/>
-              {% else %}
-                <div class="avatar"></div>
-              {% endif %}
-            </div>
-            <div>
-              <div class="text-[14px] font-[700] text-[#555]">
-                <a href="{{ domain.url }}">{{ domain.name }}</a>
+      {% if not domain_list %}
+        <div class="flex justify-center items-center h-full">
+          <div class="text-center text-[14px] text-[#787878]">暂无数据</div>
+        </div>
+      {% else %}
+        <ul class="flex flex-col p-0">
+          {% for domain in domain_list %}
+            <li class="domain-list-item text-pretty relative flex">
+              <div class="mr-[10px] min-w-[40px] min-h-[40px]">
+                {% if domain.logo_url %}
+                  <img class="avatar" src="{{ domain.logo_url }}" alt="{{ domain.name }}" width="40" height="40"/>
+                {% else %}
+                  <div class="avatar"></div>
+                {% endif %}
               </div>
-              <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
-                {% if domain.description %}{{ domain.description | markdown_to_html | safe }}{% endif %}
-                {% if domain.selling_price %}<span>售价：{{ domain.selling_price }}</span>{% endif %}
-                {% if domain.renewal_price %}<span>续费：{{ domain.renewal_price }}</span>{% endif %}
-                {% if domain.transaction_method %}<span>交易方式：{{ domain.transaction_method }}</span>{% endif %}
-              </div>
-              <div class="flex absolute absolute bottom-[8px] right-[13px]">
-                <div class="justify-end flex flex-1 ml-[30px]">
-                  {% for tag in domain.tags %}<a class="tag" href="{{ tag.tag_url }}">{{ tag.name }}</a>{% endfor %}
+              <div>
+                <div class="text-[14px] font-[700] text-[#555]">
+                  <a href="{{ domain.url }}">{{ domain.name }}</a>
+                </div>
+                <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
+                  {% if domain.description %}{{ domain.description | markdown_to_html | safe }}{% endif %}
+                  {% if domain.selling_price %}<span>售价：{{ domain.selling_price }}</span>{% endif %}
+                  {% if domain.renewal_price %}<span>续费：{{ domain.renewal_price }}</span>{% endif %}
+                  {% if domain.transaction_method %}<span>交易方式：{{ domain.transaction_method }}</span>{% endif %}
+                </div>
+                <div class="flex absolute absolute bottom-[8px] right-[13px]">
+                  <div class="justify-end flex flex-1 ml-[30px]">
+                    {% for tag in domain.tags %}<a class="tag" href="{{ tag.tag_url }}">{{ tag.name }}</a>{% endfor %}
+                  </div>
                 </div>
               </div>
-            </div>
-          </li>
-        {% endfor %}
-      </ul>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
       <div class="h-[20px]"></div>
     </div>
     <div class="ml-[20px] w-[200px]">
       <div class="flex">
         <div>
-          <img class="avatar" src="{{ user.avatar_url }}" alt="avatar" width="40" height="40"/>
+          <img class="avatar" src="{{ config.user_avatar_url }}" alt="avatar" width="40" height="40"/>
         </div>
         <div class="flex flex-col ml-[16px]">
-          <div class="text-[16px] text-[#555]">{{ user.name }}</div>
+          <div class="text-[16px] text-[#555]">{{ config.user_name }}</div>
           <div class="flex">
             <div>
               <a href="{{ url_for('admin.index') }}">
@@ -82,7 +88,7 @@
         </div>
       </div>
 
-      <div class="description">{{ user.comment | markdown_to_html | safe }}</div>
+      <div class="description">{{ config.user_comment | markdown_to_html | safe }}</div>
     </div>
   </div>
 {% endblock content %}

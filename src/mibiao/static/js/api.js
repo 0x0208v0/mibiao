@@ -121,7 +121,3 @@ async function saveConfig(data) {
 async function getMyInfo() {
   return await sendHttpGet('/api/users/me');
 }
-
-async function updateMyInfo(data) {
-  return await sendHttpPut('/api/users/me', data);
-}

@@ -12,11 +12,9 @@ from sqlalchemy.orm import relationship
 from mibiao.models.base import BaseModel
 from mibiao.models.tag import DomainTag
 from mibiao.models.tag import Tag
-from mibiao.models.user import User
-from mibiao.models.user import UserMixin
 
 
-class Domain(BaseModel, UserMixin):
+class Domain(BaseModel):
     name: Mapped[str] = mapped_column(
         String(256),
         nullable=False,
@@ -88,11 +86,10 @@ class Domain(BaseModel, UserMixin):
             cls,
             data: dict,
             *,
-            user: User | None = None,
             commit: bool = True,
     ) -> Self:
         data['tags'] = Tag.get_list_by_ids(data.pop('tag_ids'))
-        return super().create(data=data, user=user, commit=commit)
+        return super().create(data=data, commit=commit)
 
     def update(self, data: dict, commit: bool = True):
         data['tags'] = Tag.get_list_by_ids(data.pop('tag_ids'))

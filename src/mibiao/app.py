@@ -15,7 +15,7 @@ from werkzeug.exceptions import HTTPException
 from mibiao.blueprints import register_blueprints
 from mibiao.models import db
 from mibiao.models import register_models
-from mibiao.models.config import load_config_by_user
+from mibiao.models.config import load_config
 from mibiao.models.tag import Tag
 from mibiao.models.user import User
 from mibiao.settings import settings
@@ -55,18 +55,15 @@ register_blueprints(app)
 
 @app.context_processor
 def context_processor():
-    user = User.get_one()
-    config = load_config_by_user(User.get_one())
+    config = load_config()
     tag_list = Tag.get_list(
         Tag.is_hide == False,
         order_by=[
             Tag.rank,
             Tag.id.desc(),
         ],
-        user=user,
     )
     return {
-        'user': user,
         'config': config,
         'tag_list': tag_list,
     }

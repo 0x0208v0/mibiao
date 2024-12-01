@@ -6,7 +6,7 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
 ![72285645556d26d35cff885c71e4389b.png](https://ice.frostsky.com/2024/12/01/72285645556d26d35cff885c71e4389b.png)
 
-## Debian 12 部署
+## Debian 12 部署（LXC 或 KVM 架构都可以）
 
 ### 创建项目目录
 
@@ -67,7 +67,7 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
     gunicorn -c gunicorn.conf.py -b '0.0.0.0:15000' -b '[::]:15000' -D mibiao.app:app
 
-### 检查是否已经成功启动
+### 检查是否已启动
 
     ps aux | grep gunicorn
 
@@ -100,12 +100,12 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
     supervisorctl update
 
-看到下面的输出，则表示配置已经添加
+看到下面的输出，则表示配置已添加
 
     (.venv) root@g4puxx72:/etc/supervisor/conf.d# supervisorctl update
     mibiao: added process group
 
-#### 检查是否已经成功启动
+### 检查是否已启动
 
     ps aux | grep gunicorn
 

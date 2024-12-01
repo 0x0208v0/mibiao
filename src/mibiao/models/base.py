@@ -65,7 +65,7 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return object_session(self)
 
     @classmethod
-    def create(
+    def create_from_data(
             cls,
             data: dict,
             *,
@@ -78,7 +78,16 @@ class SqlalchemyBaseModel(DeclarativeBase):
             db.session.commit()
         return obj
 
-    def update(self, data: dict, commit: bool = True):
+    @classmethod
+    def create(
+            cls,
+            data: dict,
+            *,
+            commit: bool = True,
+    ):
+        return cls.create_from_data(data=data, commit=commit)
+
+    def update_from_data(self, data: dict, commit: bool = True):
         for k, v in data.items():
             if hasattr(self, k) and k not in {
                 'id',
@@ -90,6 +99,9 @@ class SqlalchemyBaseModel(DeclarativeBase):
         db.session.flush([self])
         if commit:
             db.session.commit()
+
+    def update(self, data: dict, commit: bool = True):
+        return self.create_from_data(data=data, commit=commit)
 
     def delete(self, commit: bool = True):
         db.session.delete(self)
@@ -113,7 +125,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
 
     @classmethod
-    def export_to_json_str(cls, ensure_ascii=False, indent=4, decoder_cls=None, ) -> str:
+    def export_to_json_str(
+            cls,
+            ensure_ascii=False,
+            indent=4,
+            decoder_cls=None,
+    ) -> str:
         obj_list = []
         for obj in cls.get_list():
             obj_list.append(json.loads(obj.to_json()))
@@ -121,7 +138,21 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     @classmethod
     def import_from_json_str(cls, json_str: str):
-        pass
+        json_data = json.loads(json_str)
+        for obj in cls.get_list():
+            obj.delete()
+
+        if isinstance(json_data, list):
+            data_list = json_data
+        else:
+            data_list = [json_data]
+
+        for data in data_list:
+            if 'updated_at' in data:
+                data['updated_at'] = datetime.fromisoformat(data['updated_at'])
+            if 'created_at' in data:
+                data['created_at'] = datetime.fromisoformat(data['created_at'])
+            cls.create_from_data(data)
 
     @classmethod
     def get_obj_id(cls, obj_or_id: Self | str) -> str:

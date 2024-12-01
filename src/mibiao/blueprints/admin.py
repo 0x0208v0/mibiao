@@ -54,7 +54,7 @@ def export_data():
 
 
 @blueprint.post('/api/import-data')
-# @login_required
+@login_required
 def import_data():
     file = request.files.get('file')
     if file:

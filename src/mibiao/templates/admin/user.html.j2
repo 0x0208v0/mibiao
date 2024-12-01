@@ -8,6 +8,22 @@
         <el-input v-model="formData.display_created_at" disabled/>
       </el-form-item>
     </el-form>
+
+    <el-form-item>
+      <el-button type="primary" plain @click="handleExport" :icon="Download">导出数据</el-button>
+    </el-form-item>
+    <el-form-item>
+      <el-upload
+          ref="uploadRef"
+          action="{{ url_for('admin.import_data') }}"
+          :show-file-list="false"
+          :before-upload="beforeUpload"
+          :http-request="handleHttpRequest"
+          :limit="1"
+      >
+        <el-button type="primary" plain @click="handleImport" :icon="Upload">导入数据</el-button>
+      </el-upload>
+    </el-form-item>
   </div>
 </script>
 
@@ -16,6 +32,8 @@
     template: `#me`,
     delimiters: ['@{', '}'],
     setup() {
+      const uploadRef = ref(null);
+
       const formData = reactive({
         email: '',
         display_created_at: '',
@@ -29,7 +47,47 @@
         formData.display_created_at = user['display_created_at'];
       });
 
-      return {formData};
+      async function handleExport() {
+        const a = document.createElement('a');
+        const url = `{{ url_for('admin.export_data') }}`;
+        a.href = url;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        ElMessage.success('正在下载');
+
+      }
+
+      async function handleImport() {
+        console.log('handleImport', uploadRef.value);
+        uploadRef.value.submit();
+      }
+
+      async function beforeUpload(file) {
+        if (file.size / 1024 / 1024 > 10) {
+          ElMessage.error('上传文件大小不超过10M');
+          return false;
+        }
+        return true;
+      }
+
+      async function handleHttpRequest(option) {
+        const form = new FormData();
+        form.append('file', option.file);
+        await importData(form);
+        ElMessage.success('导入成功！');
+      }
+
+      return {
+        Download,
+        Upload,
+        uploadRef,
+        formData,
+        handleExport,
+        handleImport,
+        beforeUpload,
+        handleHttpRequest,
+      };
     },
   };
 

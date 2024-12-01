@@ -14,14 +14,9 @@ services:
     restart: always
     command: [
       'gunicorn',
-      '--log-level=INFO',
-      '--capture-output',
-      '--access-logfile','-',
-      '--error-logfile', '-',
-      '-b', '0.0.0.0:8080',
-      '-k', 'gevent',
-      '-w', '1',
-      '-t', '10',
+      '-c', '/opt/mibiao/mibiao/gunicorn.conf.py'
+      '-b', '0.0.0.0:15000', # ipv4 + 端口
+      '-b' ,'[::]:15000', # ipv6 + 端口
       'mibiao.app:app'
     ]
     logging:

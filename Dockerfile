@@ -1,7 +1,7 @@
 FROM python:3.12-slim-bookworm as python3
-WORKDIR /mibiao_data
-COPY ./src /mibiao_data/src
-COPY ./pyproject.toml /mibiao_data/pyproject.toml
+WORKDIR /opt/mibiao
+COPY ./src /opt/mibiao/src
+COPY ./pyproject.toml /opt/mibiao/pyproject.toml
 RUN  python -m pip install --upgrade build  && python -m build
 
 
@@ -20,11 +20,11 @@ RUN apt update \
     && apt install --no-install-recommends -y unzip \
     && echo done
 
-WORKDIR /mibiao_data
+WORKDIR /opt/mibiao
 
-COPY --from=python3 /mibiao_data/dist /mibiao_data/dist
+COPY --from=python3 /opt/mibiao/dist /opt/mibiao/dist
 
-RUN python -m pip install --no-cache-dir /mibiao_data/dist/*.whl && rm -rf /mibiao_data/dist
+RUN python -m pip install --no-cache-dir /opt/mibiao/dist/*.whl && rm -rf /opt/mibiao/dist
 
 
 # docker build -f Dockerfile -t mibiao .

@@ -7,15 +7,6 @@
       <el-form-item label="注册时间">
         <el-input v-model="formData.display_created_at" disabled/>
       </el-form-item>
-      <el-form-item label="头像URL">
-        <el-input v-model="formData.avatar_url"/>
-      </el-form-item>
-      <el-form-item label="备注">
-        <el-input v-model="formData.comment" :rows="10" type="textarea" placeholder="请输入："/>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleSubmit">保存</el-button>
-      </el-form-item>
     </el-form>
   </div>
 </script>
@@ -36,30 +27,16 @@
         const {user} = await getMyInfo();
         formData.email = user['email'];
         formData.display_created_at = user['display_created_at'];
-        formData.avatar_url = user['avatar_url'];
-        formData.comment = user['comment'];
       });
 
-      async function handleSubmit() {
-        await updateMyInfo(
-            JSON.stringify({
-              user: {
-                avatar_url: formData.avatar_url,
-                comment: formData.comment,
-              },
-            })
-        );
-        ElMessage({message: '已保存！', type: 'success'});
-      }
-
-      return {formData, handleSubmit};
+      return {formData};
     },
   };
 
   routes.push({
-    path: '/me',
-    name: 'me',
-    title: '我的信息',
+    path: '/user',
+    name: 'user',
+    title: '管理员信息',
     component: me_component,
   });
 </script>

@@ -1,10 +1,7 @@
-from __future__ import annotations
-
 import json
 import uuid
 from datetime import datetime
 from typing import Self
-from typing import TYPE_CHECKING
 
 import pendulum
 import shortuuid
@@ -20,9 +17,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import object_session
 from werkzeug.exceptions import NotFound
-
-if TYPE_CHECKING:
-    from mibiao.models.user import User
 
 
 class JsonEncoder(json.JSONEncoder):
@@ -71,12 +65,9 @@ class SqlalchemyBaseModel(DeclarativeBase):
             cls,
             data: dict,
             *,
-            user: User | None = None,
             commit: bool = True,
     ) -> Self:
         obj = cls(**data)
-        if user:
-            obj.user_id = user.id
         db.session.add(obj)
         db.session.flush([obj])
         if commit:
@@ -89,7 +80,6 @@ class SqlalchemyBaseModel(DeclarativeBase):
                 'id',
                 'created_at',
                 'updated_at',
-                'user_id',
             }:
                 setattr(self, k, v)
         db.session.add(self)
@@ -139,17 +129,14 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return obj
 
     @classmethod
-    def get_one(cls, *where, user: User | None = None) -> Self | None:
-        extra_filters = []
-        if user:
-            extra_filters.append(cls.user_id == user.id)
-        query = select(cls).where(*where, *extra_filters)
+    def get_one(cls, *where) -> Self | None:
+        query = select(cls).where(*where)
         result = db.session.execute(query)
         return result.scalar_one_or_none()
 
     @classmethod
-    def get_one_or_404(cls, *where, user: User | None = None) -> Self:
-        obj = cls.get_one(*where, user=user)
+    def get_one_or_404(cls, *where) -> Self:
+        obj = cls.get_one(*where)
         if obj is None:
             raise NotFound(f'{cls.__name__} 不存在')
         return obj
@@ -161,14 +148,10 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by: list | None = None,
             offset: int | None = None,
             limit: int | None = None,
-            user: User | None = None,
     ) -> Select:
         query = select(cls)
-        extra_filters = []
-        if user:
-            extra_filters.append(cls.user_id == user.id)
         if where:
-            query = query.where(*where, *extra_filters)
+            query = query.where(*where)
         if order_by:
             query = query.order_by(*order_by)
         if offset is not None:
@@ -178,8 +161,8 @@ class SqlalchemyBaseModel(DeclarativeBase):
         return query
 
     @classmethod
-    def count(cls, *where, user: User | None = None) -> int:
-        subquery = cls.build_query(*where, user=user).subquery()
+    def count(cls, *where) -> int:
+        subquery = cls.build_query(*where).subquery()
         query = select(func.count(subquery.c.id).label('count'))
         result = db.session.execute(query)
         for (cnt,) in result:
@@ -192,14 +175,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by: list | None = None,
             offset: int | None = None,
             limit: int | None = None,
-            user: User | None = None,
     ) -> list[Self]:
         query = cls.build_query(
             *where,
             order_by=order_by,
             offset=offset,
             limit=limit,
-            user=user,
         )
         return list(db.session.execute(query).scalars())
 
@@ -217,7 +198,6 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by: list | None = None,
             page_num: int = 1,
             page_size: int = 20,
-            user: User | None = None,
     ) -> list[Self]:
         if not order_by:
             order_by = [cls.id]
@@ -226,7 +206,6 @@ class SqlalchemyBaseModel(DeclarativeBase):
             order_by=order_by,
             offset=(page_num - 1) * page_size,
             limit=page_size,
-            user=user,
         )
 
 

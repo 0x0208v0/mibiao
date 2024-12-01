@@ -27,27 +27,24 @@ TG：YXNkZmFzZGY=
         )
         user.password = 'a'
 
-        tag = Tag(name='全部', url_path_name='', user=user)
+        tag = Tag(name='全部', url_path_name='')
 
         logo_url = 'https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png'
         objs = [
             user,
             tag,
             Domain(
-                user=user,
                 logo_url=logo_url,
                 name='a.com',
                 description='这是一额米，现价100，续费100，赶紧买',
                 tags=[tag],
             ),
             Domain(
-                user=user,
                 logo_url=logo_url,
                 name='b.com',
                 description='这是一额米',
             ),
             Domain(
-                user=user,
                 name='c.com',
             ),
         ]
@@ -58,7 +55,7 @@ TG：YXNkZmFzZGY=
 
 if __name__ == '__main__':
     # 如果需要测试数据，可以解除 create_test_data() 注释
-    create_test_data()
+    # create_test_data()
     app.run(
         debug=True,
         threaded=False,

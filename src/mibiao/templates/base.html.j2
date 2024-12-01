@@ -54,7 +54,7 @@
           <ul class="flex justify-center items-center ml-[15px]">
             {% for tag in tag_list %}
               <li class="flex justify-center items-center ml-[8px] mr-[8px] text-[13px] text-[#555]">
-                <a class="m-0 p-0" href="{{ url_for('main.index_by_tag', url_path_name=tag.url_path_name) }}">
+                <a class="m-0 p-0" href="{{ url_for('main.tag_index', url_path_name=tag.url_path_name) }}">
                   {{ tag.name }}
                 </a>
               </li>
@@ -69,14 +69,16 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
-              {% if category == 'warning' %}
+              {% if category == 'success' %}
+                {% set alert_class = "alert-success" %}
+              {% elif category == 'warning' %}
                 {% set alert_class = "alert-warning" %}
               {% elif category == 'error' %}
                 {% set alert_class = "alert-danger" %}
               {% elif category == 'info' %}
-                {% set alert_class = "alert-primary" %}
+                {% set alert_class = "alert-info" %}
               {% else %}
-                {% set alert_class = "alert-secondary" %}
+                {% set alert_class = "alert-primary" %}
               {% endif %}
               <div class="alert {{ alert_class }} alert-dismissible fade show" role="alert">
                 {{ message }}

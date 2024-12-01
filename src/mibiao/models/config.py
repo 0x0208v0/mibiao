@@ -12,9 +12,6 @@ from sqlalchemy.orm import mapped_column
 
 from mibiao.models.base import BaseModel
 from mibiao.models.base import session
-from mibiao.models.user import User
-from mibiao.models.user import UserMixin
-from mibiao.models.user import get_user_id
 
 
 class ConfigItemValueType(StrEnum):
@@ -24,7 +21,7 @@ class ConfigItemValueType(StrEnum):
     NONE = 'none'
 
 
-class ConfigItem(BaseModel, UserMixin):
+class ConfigItem(BaseModel):
     name: Mapped[str] = mapped_column(
         String(256),
         nullable=False,
@@ -115,12 +112,22 @@ class Item:
 
     def __set__(self, instance: Config, value):
         if self.name not in instance.item_dict:
-            instance.item_dict[self.name] = ConfigItem(user_id=instance.user_id, name=self.name)
+            instance.item_dict[self.name] = ConfigItem(name=self.name)
         instance.item_dict[self.name].set_value(value)
 
 
 class Config:
     __item_name_set__: set
+
+    user_name: str = Item(default_value='我是MJJ')
+
+    user_avatar_url: str = Item(
+        default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png',
+    )
+
+    user_comment: str = Item(
+        default_value='这个人很懒，什么都没留下。',
+    )
 
     site_title: str = Item(default_value='DomainSeek')
 
@@ -132,8 +139,7 @@ class Config:
 
     site_copyright: str = Item(default_value='Copyright © 2024 - 2025 All rights Reserved')
 
-    def __init__(self, user_id: str, items: list[ConfigItem] | None = None):
-        self.user_id: str = user_id
+    def __init__(self, items: list[ConfigItem] | None = None):
         self.item_dict: dict = {item.name: item for item in (items or [])}
 
     @classmethod
@@ -153,7 +159,6 @@ class Config:
         return {name: getattr(self, name) for name in self.__item_name_set__}
 
 
-def load_config_by_user(user_or_id: User | str) -> Config:
-    user_id = get_user_id(user_or_id)
-    items = ConfigItem.get_list(ConfigItem.user_id == user_id)
-    return Config(user_id, items)
+def load_config() -> Config:
+    items = ConfigItem.get_list()
+    return Config(items)

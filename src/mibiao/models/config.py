@@ -119,16 +119,6 @@ class Item:
 class Config:
     __item_name_set__: set
 
-    user_name: str = Item(default_value='我是MJJ')
-
-    user_avatar_url: str = Item(
-        default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png',
-    )
-
-    user_comment: str = Item(
-        default_value='这个人很懒，什么都没留下。',
-    )
-
     site_title: str = Item(default_value='DomainSeek')
 
     site_icon_url: str = Item(default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png')
@@ -138,6 +128,16 @@ class Config:
     site_beta: str = Item(default_value='beta')
 
     site_copyright: str = Item(default_value='Copyright © 2024 - 2025 All rights Reserved')
+
+    user_name: str = Item(default_value='善良的MJJ')
+
+    user_avatar_url: str = Item(
+        default_value='https://www.nodeseek.com/static/image/favicon/android-chrome-192x192.png',
+    )
+
+    user_comment: str = Item(
+        default_value='这个人很懒，什么都没留下。',
+    )
 
     def __init__(self, items: list[ConfigItem] | None = None):
         self.item_dict: dict = {item.name: item for item in (items or [])}

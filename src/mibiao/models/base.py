@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import json
 import uuid
 from datetime import datetime
@@ -23,6 +25,8 @@ class JsonEncoder(json.JSONEncoder):
     def default(self, field):
         if isinstance(field, uuid.UUID):
             return str(field)
+        elif isinstance(field, datetime):
+            return field.isoformat()
         else:
             return super().default(field)
 
@@ -99,11 +103,25 @@ class SqlalchemyBaseModel(DeclarativeBase):
         if commit:
             db.session.commit()
 
+    def to_record(self) -> dict:
+        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
+
     def to_dict(self) -> dict:
         return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
 
     def to_json(self, decoder_cls=None) -> str:
-        return json.dumps(self.to_dict(), cls=decoder_cls or JsonEncoder)
+        return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
+
+    @classmethod
+    def export_to_json_str(cls, ensure_ascii=False, indent=4, decoder_cls=None, ) -> str:
+        obj_list = []
+        for obj in cls.get_list():
+            obj_list.append(json.loads(obj.to_json()))
+        return json.dumps(obj_list, ensure_ascii=ensure_ascii, indent=indent, cls=decoder_cls or JsonEncoder)
+
+    @classmethod
+    def import_from_json_str(cls, json_str: str):
+        pass
 
     @classmethod
     def get_obj_id(cls, obj_or_id: Self | str) -> str:
@@ -212,8 +230,8 @@ class SqlalchemyBaseModel(DeclarativeBase):
 db = SQLAlchemy(
     model_class=SqlalchemyBaseModel,
     engine_options={
-        'pool_size': 2,
-        'pool_recycle': 10,
+        'pool_size': 1,
+        'pool_recycle': 100,
         'pool_pre_ping': True,
     },
     session_options={

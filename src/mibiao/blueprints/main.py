@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from flask import Blueprint
 from flask import redirect
 from flask import render_template

@@ -12,16 +12,20 @@ services:
     volumes:
       - ./mibiao_data:/mibiao_data
     restart: always
-    command: [ 'mibiao', 'run', '--host=0.0.0.0', '--port=8080' ]
+    command: [
+      'gunicorn',
+      '--log-level=INFO',
+      '--capture-output',
+      '--access-logfile','-',
+      '--error-logfile', '-',
+      '-b', '0.0.0.0:8080',
+      '-k', 'gevent',
+      '-w', '1',
+      '-t', '10',
+      'mibiao.app:app'
+    ]
     logging:
       driver: 'json-file'
       options:
         max-size: '10M'
         max-file: '10'
-
-
-# docker-compose pull
-
-# docker-compose build
-
-# docker-compose down && docker-compose up -d

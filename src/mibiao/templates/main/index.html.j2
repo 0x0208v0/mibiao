@@ -49,10 +49,20 @@
                   <a href="{{ domain.url }}">{{ domain.name }}</a>
                 </div>
                 <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
-                  {% if domain.description %}{{ domain.description | markdown_to_html | safe }}{% endif %}
-                  {% if domain.selling_price %}<span>售价：{{ domain.selling_price }}</span>{% endif %}
-                  {% if domain.renewal_price %}<span>续费：{{ domain.renewal_price }}</span>{% endif %}
-                  {% if domain.transaction_method %}<span>交易方式：{{ domain.transaction_method }}</span>{% endif %}
+                  <p>
+                    {% if domain.description %}
+                      {{ domain.description | markdown_to_html | safe }}
+                    {% endif %}
+                  </p>
+                  {% if domain.selling_price %}
+                    <span class="mr-1">售价：{{ domain.selling_price }}</span>
+                  {% endif %}
+                  {% if domain.renewal_price %}
+                    <span class="mr-1">续费：{{ domain.renewal_price }}</span>
+                  {% endif %}
+                  {% if domain.transaction_method %}
+                    <span class="mr-1">交易方式：{{ domain.transaction_method }}</span>
+                  {% endif %}
                 </div>
                 <div class="flex absolute absolute bottom-[8px] right-[13px]">
                   <div class="justify-end flex flex-1 ml-[30px]">

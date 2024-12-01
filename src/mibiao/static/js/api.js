@@ -1,4 +1,5 @@
 const {ElMessage} = ElementPlus;
+const {Download, Upload} = ElementPlusIconsVue;
 
 async function checkResponseDataOkOrError(status, data) {
   if (data && data.err && status !== 401) {
@@ -31,13 +32,9 @@ async function checkResponseStatusOkOrError(status) {
   }
 }
 
-function getToken() {
-  return 'hello world';
-}
 
 async function sendHttpRequest(method, url, data, options) {
   const headers = {
-    Authorization: `Bearer ${getToken()}`,
     'content-type': 'application/json',
   };
   const defaultOptions = {method, headers};
@@ -46,7 +43,7 @@ async function sendHttpRequest(method, url, data, options) {
   } else {
     defaultOptions.body = data || {};
   }
-  const finalOptions = _.merge(defaultOptions, options || {});
+  const finalOptions = Object.assign({}, defaultOptions, options || {});
   const response = await fetch(url, finalOptions);
   const result = await response.json();
   await checkResponseDataOkOrError(response.status, result);
@@ -70,8 +67,9 @@ async function sendHttpDelete(url, data, options) {
   return await sendHttpRequest('DELETE', url, data, options);
 }
 
-async function sendHttpForm(url, formData, options) {
-  return await sendHttpRequest('POST', url, formData, options);
+async function sendHttpPostForm(url, formData, options) {
+  const headers = {}
+  return await sendHttpRequest('POST', url, formData, {headers});
 }
 
 /* 标签 */
@@ -120,4 +118,8 @@ async function saveConfig(data) {
 /* 用户信息 */
 async function getMyInfo() {
   return await sendHttpGet('/api/users/me');
+}
+
+async function importData(formData) {
+  return await sendHttpPostForm('/api/import-data', formData);
 }

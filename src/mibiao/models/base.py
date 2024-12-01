@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime
+from json import JSONEncoder
 from typing import Self
 
 import pendulum
@@ -21,7 +22,7 @@ from sqlalchemy.orm import object_session
 from werkzeug.exceptions import NotFound
 
 
-class JsonEncoder(json.JSONEncoder):
+class JsonEncoder(JSONEncoder):
     def default(self, field):
         if isinstance(field, uuid.UUID):
             return str(field)
@@ -118,18 +119,18 @@ class SqlalchemyBaseModel(DeclarativeBase):
     def to_record(self) -> dict:
         return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
 
+    def to_json(self, decoder_cls: JSONEncoder | None = None) -> str:
+        return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
+
     def to_dict(self) -> dict:
         return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
-
-    def to_json(self, decoder_cls=None) -> str:
-        return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
 
     @classmethod
     def export_to_json_str(
             cls,
-            ensure_ascii=False,
-            indent=4,
-            decoder_cls=None,
+            ensure_ascii: bool = False,
+            indent: int = 4,
+            decoder_cls: JSONEncoder | None = None,
     ) -> str:
         obj_list = []
         for obj in cls.get_list():

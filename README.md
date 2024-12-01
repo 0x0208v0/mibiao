@@ -126,3 +126,15 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
         docker compose build
     
         docker compose down && docker-compose up -d
+
+## 参考资料：
+
+### Gunicorn：
+
+[Gunicorn Settings¶](https://docs.gunicorn.org/en/latest/settings.html#settings)
+
+### Supervisor：
+
+[Supervisor Configuration File¶](http://supervisord.org/configuration.html)  
+[Differences between reread, reload, restart, update? #720](https://github.com/Supervisor/supervisor/issues/720)  
+[Supervisord: Restarting and Reloading](https://www.onurguzel.com/supervisord-restarting-and-reloading/)

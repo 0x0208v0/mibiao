@@ -1,4 +1,4 @@
-const { ElMessage } = ElementPlus;
+const {ElMessage} = ElementPlus;
 
 async function checkResponseDataOkOrError(status, data) {
   if (data && data.err && status !== 401) {
@@ -40,7 +40,7 @@ async function sendHttpRequest(method, url, data, options) {
     Authorization: `Bearer ${getToken()}`,
     'content-type': 'application/json',
   };
-  const defaultOptions = { method, headers };
+  const defaultOptions = {method, headers};
   if (method === 'GET') {
     defaultOptions.query = data || {};
   } else {

@@ -1,7 +1,7 @@
 <script id="me" type="text/x-template">
   <div>
     <el-form :model="formData" label-width="auto" style="max-width: 600px">
-         <el-form-item label="登陆邮箱">
+      <el-form-item label="登陆邮箱">
         <el-input v-model="formData.email" disabled/>
       </el-form-item>
       <el-form-item label="注册时间">
@@ -33,7 +33,7 @@
       });
 
       onMounted(async () => {
-        const { user } = await getMyInfo();
+        const {user} = await getMyInfo();
         formData.email = user['email'];
         formData.display_created_at = user['display_created_at'];
         formData.avatar_url = user['avatar_url'];
@@ -42,17 +42,17 @@
 
       async function handleSubmit() {
         await updateMyInfo(
-          JSON.stringify({
-            user: {
-              avatar_url: formData.avatar_url,
-              comment: formData.comment,
-            },
-          })
+            JSON.stringify({
+              user: {
+                avatar_url: formData.avatar_url,
+                comment: formData.comment,
+              },
+            })
         );
-        ElMessage({ message: '已保存！', type: 'success' });
+        ElMessage({message: '已保存！', type: 'success'});
       }
 
-      return { formData, handleSubmit };
+      return {formData, handleSubmit};
     },
   };
 

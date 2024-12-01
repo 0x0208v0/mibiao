@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import logging
 import os
-import pathlib
-import secrets
 
-from filelock import FileLock
 from flask import Flask
 from flask_compress import Compress
 from flask_login import LoginManager
@@ -76,11 +73,3 @@ def markdown_to_html(s):
 
 with app.app_context():
     db.create_all()
-
-    env_file_path = pathlib.Path('.env')
-    if not env_file_path.exists():
-        with FileLock('.env.lock') as lock:
-            if not env_file_path.exists():
-                with open('.env', 'w+') as f:
-                    secret_key = secrets.token_hex(16)
-                    f.write(f'SECRET_KEY={secret_key}')

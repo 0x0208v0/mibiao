@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from flask import Blueprint
 from flask import request
 from flask_login import login_required

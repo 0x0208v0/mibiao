@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy_utils import force_instant_defaults
 
 force_instant_defaults()

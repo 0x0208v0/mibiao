@@ -16,6 +16,9 @@
       <el-form-item label="Copyright">
         <el-input v-model="formData.site_copyright"/>
       </el-form-item>
+      <el-form-item label="用户名">
+        <el-input v-model="formData.user_name"/>
+      </el-form-item>
       <el-form-item label="用户头像URL">
         <el-input v-model="formData.user_avatar_url"/>
       </el-form-item>
@@ -51,6 +54,7 @@
         formData.site_brand = config['site_brand'];
         formData.site_beta = config['site_beta'];
         formData.site_copyright = config['site_copyright'];
+        formData.user_name = config['user_name'];
         formData.user_avatar_url = config['user_avatar_url'];
         formData.user_comment = config['user_comment'];
       });

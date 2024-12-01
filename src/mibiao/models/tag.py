@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy import Boolean
 from sqlalchemy import Integer
 from sqlalchemy import String

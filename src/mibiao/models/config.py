@@ -132,8 +132,8 @@ class Config:
 
     site_copyright: str = Item(default_value='Copyright © 2024 - 2025 All rights Reserved')
 
-    def __init__(self, user_id: int, items: list[ConfigItem] | None = None):
-        self.user_id: int = user_id
+    def __init__(self, user_id: str, items: list[ConfigItem] | None = None):
+        self.user_id: str = user_id
         self.item_dict: dict = {item.name: item for item in (items or [])}
 
     @classmethod
@@ -153,7 +153,7 @@ class Config:
         return {name: getattr(self, name) for name in self.__item_name_set__}
 
 
-def load_config_by_user(user_or_id: User | int) -> Config:
+def load_config_by_user(user_or_id: User | str) -> Config:
     user_id = get_user_id(user_or_id)
     items = ConfigItem.get_list(ConfigItem.user_id == user_id)
     return Config(user_id, items)

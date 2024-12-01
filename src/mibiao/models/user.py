@@ -156,5 +156,5 @@ class UserMixin:
             raise ValueError(f'没有权限操作资源 `{self}`')
 
 
-def get_user_id(user_or_id: User | int) -> int:
-    return user_or_id if isinstance(user_or_id, int) else user_or_id.id
+def get_user_id(user_or_id: User | str) -> str:
+    return user_or_id if isinstance(user_or_id, str) else user_or_id.id

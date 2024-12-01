@@ -206,7 +206,7 @@
       const tags = ref([]);
 
       async function fetchTags() {
-        const { tag_list } = await getTagList();
+        const {tag_list} = await getTagList();
         tags.value = tag_list;
       }
 
@@ -214,7 +214,7 @@
       const tableData = ref([]);
 
       async function refreshTableData() {
-        const { domain_list } = await getDomainList();
+        const {domain_list} = await getDomainList();
         tableData.value = domain_list;
       }
 
@@ -244,9 +244,9 @@
       }
 
       async function handleCreateDialogSubmit() {
-        await createDomain(JSON.stringify({ domain: createFormData.value }));
+        await createDomain(JSON.stringify({domain: createFormData.value}));
         await refreshTableData();
-        ElMessage({ message: '已新增！', type: 'success' });
+        ElMessage({message: '已新增！', type: 'success'});
         await handleCreateDialogCancel();
       }
 
@@ -282,11 +282,11 @@
 
       async function handleEditDialogSubmit() {
         await updateDomain(
-          editFormData.value.id,
-          JSON.stringify({ domain: editFormData.value })
+            editFormData.value.id,
+            JSON.stringify({domain: editFormData.value})
         );
         await refreshTableData();
-        ElMessage({ message: '已保存！', type: 'success' });
+        ElMessage({message: '已保存！', type: 'success'});
         await handleEditDialogCancel();
       }
 
@@ -323,7 +323,7 @@
       async function handleDeleteDialogSubmit() {
         await deleteDomain(deleteFormData.value.id);
         await refreshTableData();
-        ElMessage({ message: '删除成功！', type: 'success' });
+        ElMessage({message: '删除成功！', type: 'success'});
         await handleDeleteDialogCancel();
       }
 

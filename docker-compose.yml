@@ -1,50 +1,24 @@
 version: '3.1'
 services:
-  webserver:
+  mibiao:
     build:
       context: .
       dockerfile: Dockerfile
     image: mibiao
-    container_name: 'mibiao-webserver'
+    container_name: 'mibiao'
     ports:
-      - ${WEBSERVER_PORT:-15100}:5000
+      - ${WEBSERVER_PORT:-8080}:8080
     working_dir: /mibiao_data
     volumes:
       - ./mibiao_data:/mibiao_data
     restart: always
-    command: [
-      'gunicorn',
-      '--log-level=INFO',
-      '--capture-output',
-      '--access-logfile','-',
-      '--error-logfile', '-',
-      '-b', '0.0.0.0:5000',
-      '-k', 'gevent',
-      '-w', '2',
-      '-t', '30',
-      'mibiao.app:app'
-    ]
+    command: [ 'mibiao', 'run', '--host=0.0.0.0', '--port=8080' ]
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-size: "10M"
-        max-file: "10"
-  task:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: mibiao
-    container_name: 'mibiao-task'
-    working_dir: /mibiao_data
-    volumes:
-      - ./mibiao_data:/mibiao_data
-    restart: always
-    command: [ 'mibiao', 'task' ]
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10M"
-        max-file: "10"
+        max-size: '10M'
+        max-file: '10'
+
 
 # docker-compose pull
 

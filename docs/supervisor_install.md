@@ -35,3 +35,11 @@
     root@g4puxx72:/etc/supervisor/conf.d# ps aux | grep gunicorn
     root        7931  0.0 10.9  39248 28672 ?        S    14:54   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c /opt/mibiao/gunicorn.conf.py -b 0.0.0.0:15000 mibiao.app:app
     root        7932  0.0 26.0 1133184 68312 ?       S    14:54   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c /opt/mibiao/gunicorn.conf.py -b 0.0.0.0:15000 mibiao.app:app
+
+## 停止项目
+
+    supervisorctl stop mibiao
+
+## 启动项目
+
+    supervisorctl start mibiao

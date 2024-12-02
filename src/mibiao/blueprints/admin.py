@@ -46,10 +46,12 @@ def export_data():
         zip_file.writestr(filename, model.export_to_json_str())
     zip_file.close()
     file.seek(0)
+    date_str = pendulum.now('Asia/Shanghai').strftime('%Y%m%d')
+    download_name = f"data-{date_str}.zip"
     return send_file(
         file,
         as_attachment=True,
-        download_name=f'data-{pendulum.now('Asia/Shanghai').strftime('%Y%m%d')}.zip',
+        download_name=download_name,
     )
 
 

@@ -6,15 +6,16 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
 ![72285645556d26d35cff885c71e4389b.png](https://ice.frostsky.com/2024/12/01/72285645556d26d35cff885c71e4389b.png)
 
-## Alpine 3.18
+## 【⚠️必装️】Python3 相关软件安装
+
+[Alpine 安装 Python3 及相关软件](./docs/alpine_install_python3.md)  
+[Debian 安装 Python3 及相关软件](./docs/debian_install_python3.md)
+
+## 项目安装
 
 ### 创建项目目录
 
     mkdir -p /opt/mibiao && cd /opt/mibiao
-
-### 安装必备软件
-
-    apk update && apk add git
 
 ### 克隆项目代码
 
@@ -28,11 +29,7 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
     pwd
 
-### 安装 Python3 相关软件
-
-    apk add python3 && apk add py3-pip
-
-### 创建 Python3 虚拟环境
+### 创建 Python3 虚拟环境（参考上面的 “Python3 相关软件安装”部分）
 
     python3 -m venv .venv
 
@@ -42,45 +39,7 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
 ### 安装项目依赖包
 
-    pip install e .
-
-## Debian 12 部署（LXC 或 KVM 架构都可以）
-
-### 创建项目目录
-
-    mkdir -p /opt/mibiao && cd /opt/mibiao
-
-### 安装必备软件
-
-    apt update && apt upgrade -y && apt install --no-install-recommends -y git
-
-### 克隆项目代码
-
-    git clone https://github.com/0x0208v0/mibiao.git /opt/mibiao 
-
-### 创建项目数据目录
-
-    mkdir -p /opt/mibiao/mibiao_data
-
-### 【可选】查看当前路径是否正确（注意：确保此时应该在 /opt/mibiao 目录里）
-
-    pwd
-
-### 安装 Python3 相关软件
-
-    apt install --no-install-recommends -y python3 python3-pip python3-venv
-
-### 创建 Python3 虚拟环境
-
-    python3 -m venv .venv
-
-### 激活虚拟环境
-
-    source /opt/mibiao/.venv/bin/activate
-
-### 安装项目依赖包
-
-    pip install e .
+    pip install --no-cache-dir -e .
 
 ### 后台运行项目（重启后，项目无法自动重启😭）
 
@@ -115,43 +74,9 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
     root        7265  0.0  9.0  39232 23720 ?        S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
     root        7266  0.0 25.9 1133244 68040 ?       S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
 
-## 【可选】Supervisor 安装 + 配置 + 守护（推荐：重启后，项目可以自动重启😎）
+## 【可选】保活
 
-### Debian 12 安装 Supervisor
-
-    # 安装软件
-    apt update && apt upgrade -y && apt install -y supervisor
-    
-    # 进入配置目录
-    cd /etc/supervisor/conf.d
-    
-    # 确认是否安装成功（成功则能看见 conf.d 和 supervisord.conf）
-    ls /etc/supervisor
-
-### 配置 + 后台守护
-
-#### 从项目里复制一份 Supervisor 配置文件
-
-    cp /opt/mibiao/supervisor.conf /etc/supervisor/conf.d/mibiao.conf
-
-#### 让 Supervisor 重新加载配置文件，并启动项目
-
-    supervisorctl update
-
-看到下面的输出，则表示配置已添加
-
-    (.venv) root@g4puxx72:/etc/supervisor/conf.d# supervisorctl update
-    mibiao: added process group
-
-### 检查是否已启动
-
-    ps aux | grep gunicorn
-
-看到下面的输出，则表示成功：
-
-    root@g4puxx72:/etc/supervisor/conf.d# ps aux | grep gunicorn
-    root        7931  0.0 10.9  39248 28672 ?        S    14:54   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c /opt/mibiao/gunicorn.conf.py -b 0.0.0.0:15000 mibiao.app:app
-    root        7932  0.0 26.0 1133184 68312 ?       S    14:54   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c /opt/mibiao/gunicorn.conf.py -b 0.0.0.0:15000 mibiao.app:app
+[Supervisor 安装 + 配置 + 守护（推荐：重启后，项目可以自动重启😎）](./docs/supervisor_install.md)
 
 ## docker + docker-compose 部署
 
@@ -161,9 +86,9 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
 ## docker + docker compose 部署
 
-        docker compose build
-    
-        docker compose down && docker-compose up -d
+    docker compose build
+
+    docker compose down && docker-compose up -d
 
 ## 参考资料：
 

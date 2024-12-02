@@ -1,4 +1,4 @@
-## Alpine 3.18 安装 Python3 及相关软件
+## Alpine 3.18 安装 Python3 及相关依赖软件
 
 ### 安装必备软件
 

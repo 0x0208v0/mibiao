@@ -1,17 +1,17 @@
 # mibiao
 
-NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
+NodeSeek风格米表，推荐部署在128MB内存及以上的VPS。
 
 运行效果如下：
 
 ![72285645556d26d35cff885c71e4389b.png](https://ice.frostsky.com/2024/12/01/72285645556d26d35cff885c71e4389b.png)
 
-## 【⚠️必装️】Python3 相关软件安装
+## 【⚠️必装️】Python3 及相关依赖软件安装
 
-[Alpine 安装 Python3 及相关软件](./docs/alpine_install_python3.md)  
-[Debian 安装 Python3 及相关软件](./docs/debian_install_python3.md)
+[Alpine 安装 Python3 及相关依赖软件](./docs/alpine_install_python3.md)  
+[Debian 安装 Python3 及相关依赖软件](./docs/debian_install_python3.md)
 
-## 项目安装
+## 项目安装（需要 Python3 及相关依赖软件）
 
 ### 创建项目目录
 
@@ -20,10 +20,6 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 ### 克隆项目代码
 
     git clone https://github.com/0x0208v0/mibiao.git /opt/mibiao 
-
-### 创建项目数据目录
-
-    mkdir -p /opt/mibiao/mibiao_data
 
 ### 【可选】查看当前路径是否正确（注意：确保此时应该在 /opt/mibiao 目录里）
 
@@ -74,17 +70,17 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
     root        7265  0.0  9.0  39232 23720 ?        S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
     root        7266  0.0 25.9 1133244 68040 ?       S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
 
-## 【可选】保活
+## 【可选】保活（推荐：重启后，项目可以自动重启😎）
 
-[Supervisor 安装 + 配置 + 守护（推荐：重启后，项目可以自动重启😎）](./docs/supervisor_install.md)
+[安装 Supervisor 并配置保活](./docs/supervisor_install.md)
 
-## docker + docker-compose 部署
+## docker + docker-compose 方式安装项目
 
     docker-compose build
     
     docker-compose down && docker-compose up -d
 
-## docker + docker compose 部署
+## docker + docker compose 方式安装项目
 
     docker compose build
 

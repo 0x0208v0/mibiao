@@ -1,4 +1,4 @@
-## Debian 12 安装 Python3 及相关软件
+## Debian 12 安装 Python3 及相关依赖软件
 
 ### 安装必备软件
 

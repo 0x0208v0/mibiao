@@ -1,4 +1,4 @@
-## Supervisor 安装 + 配置自启
+## 安装 Supervisor 并配置保活
 
 ### Debian 12 安装 Supervisor
 

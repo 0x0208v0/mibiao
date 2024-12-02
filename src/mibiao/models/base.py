@@ -12,6 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import DateTime
 from sqlalchemy import Select
 from sqlalchemy import String
+from sqlalchemy import delete
 from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy.orm import DeclarativeBase
@@ -110,6 +111,12 @@ class SqlalchemyBaseModel(DeclarativeBase):
         if commit:
             db.session.commit()
 
+    @classmethod
+    def delete_all(cls, commit: bool = True):
+        db.session.execute(delete(cls))
+        if commit:
+            db.session.commit()
+
     def save(self, commit: bool = True):
         db.session.add(self)
         db.session.flush([self])
@@ -140,14 +147,10 @@ class SqlalchemyBaseModel(DeclarativeBase):
     @classmethod
     def import_from_json_str(cls, json_str: str):
         json_data = json.loads(json_str)
-        for obj in cls.get_list():
-            obj.delete()
-
         if isinstance(json_data, list):
             data_list = json_data
         else:
             data_list = [json_data]
-
         for data in data_list:
             if 'updated_at' in data:
                 data['updated_at'] = datetime.fromisoformat(data['updated_at'])

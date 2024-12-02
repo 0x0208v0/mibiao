@@ -8,15 +8,15 @@ services:
     container_name: 'mibiao'
     ports:
       - ${WEBSERVER_PORT:-8080}:8080
-    working_dir: /opt/mibiao
+    working_dir: /opt/mibiao/mibiao_data
     volumes:
-      - /opt/mibiao:/opt/mibiao
+      - ./mibiao_data:/opt/mibiao/mibiao_data
     restart: always
     command: [
       'gunicorn',
       '-c', '/opt/mibiao/gunicorn.conf.py',
       '-b', '0.0.0.0:15000', # ipv4 + 端口
-      '-b' ,'[::]:15000', # ipv6 + 端口
+      # '-b' ,'[::]:15000', # ipv6 + 端口
       'mibiao.app:app'
     ]
     logging:

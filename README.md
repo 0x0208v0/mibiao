@@ -6,7 +6,7 @@ NodeSeek风格米表，推荐部署在128MB内存及以上的VPS。
 
 ![72285645556d26d35cff885c71e4389b.png](https://ice.frostsky.com/2024/12/01/72285645556d26d35cff885c71e4389b.png)
 
-## 【⚠️必装️】Python3 及相关依赖软件安装
+## 【‼️必装️】Python3 及相关依赖软件安装
 
 [Alpine 安装 Python3 及相关依赖软件](./docs/alpine_install_python3.md)  
 [Debian 安装 Python3 及相关依赖软件](./docs/debian_install_python3.md)
@@ -21,7 +21,11 @@ NodeSeek风格米表，推荐部署在128MB内存及以上的VPS。
 
     git clone https://github.com/0x0208v0/mibiao.git /opt/mibiao 
 
-### 【可选】查看当前路径是否正确（注意：确保此时应该在 /opt/mibiao 目录里）
+### 创建项目数据目录（⚠️注意：用于存放项目的数据库和其他文件）
+
+    mkdir -p /opt/mibiao/mibiao_data
+
+### 【可选】查看当前路径是否正确（⚠️注意：确保此时在 /opt/mibiao 目录中）
 
     pwd
 
@@ -37,7 +41,7 @@ NodeSeek风格米表，推荐部署在128MB内存及以上的VPS。
 
     pip install --no-cache-dir -e .
 
-### 后台运行项目（重启后，项目无法自动重启😭）
+### 后台运行项目（服务器重启后，项目将无法自动重启😭，自启请看“保活”相关文档）
 
 根据 VPS 情况，启动项目时监听 IPv4 或者 IPv6（下面三种方式选择一种即可）
 

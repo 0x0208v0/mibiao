@@ -6,6 +6,44 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
 ![72285645556d26d35cff885c71e4389b.png](https://ice.frostsky.com/2024/12/01/72285645556d26d35cff885c71e4389b.png)
 
+## Alpine 3.18
+
+### 创建项目目录
+
+    mkdir -p /opt/mibiao && cd /opt/mibiao
+
+### 安装必备软件
+
+    apk update && apk add git
+
+### 克隆项目代码
+
+    git clone https://github.com/0x0208v0/mibiao.git /opt/mibiao 
+
+### 创建项目数据目录
+
+    mkdir -p /opt/mibiao/mibiao_data
+
+### 【可选】查看当前路径是否正确（注意：确保此时应该在 /opt/mibiao 目录里）
+
+    pwd
+
+### 安装 Python3 相关软件
+
+    apk add python3 && apk add py3-pip
+
+### 创建 Python3 虚拟环境
+
+    python3 -m venv .venv
+
+### 激活虚拟环境
+
+    source /opt/mibiao/.venv/bin/activate
+
+### 安装项目依赖包
+
+    pip install e .
+
 ## Debian 12 部署（LXC 或 KVM 架构都可以）
 
 ### 创建项目目录
@@ -32,7 +70,7 @@ NodeSeek风格米表，推荐部署在内存256MB以上的VPS。
 
     apt install --no-install-recommends -y python3 python3-pip python3-venv
 
-### 创建Python3.12虚拟环境
+### 创建 Python3 虚拟环境
 
     python3 -m venv .venv
 

@@ -30,9 +30,9 @@ def index():
 FILE_MODEL_DICT = {
     'user.json': User,
     'config_item.json': ConfigItem,
-    'tag.json': Tag,
     'domain.json': Domain,
     'domain_tag.json': DomainTag,
+    'tag.json': Tag,
 }
 
 
@@ -59,8 +59,14 @@ def import_data():
     file = request.files.get('file')
     if file:
         zip_file = zipfile.ZipFile(file.stream)
+        filename_json_str_map = {}
         for filename in zip_file.namelist():
-            if filename not in FILE_MODEL_DICT:
-                continue
-            FILE_MODEL_DICT[filename].import_from_json_str(zip_file.read(filename).decode('utf-8'))
+            if filename in FILE_MODEL_DICT:
+                filename_json_str_map[filename] = zip_file.read(filename).decode('utf-8')
+        for filename, model in FILE_MODEL_DICT.items():
+            if filename in filename_json_str_map:
+                FILE_MODEL_DICT[filename].delete_all()
+        for filename, model in FILE_MODEL_DICT.items():
+            if filename in filename_json_str_map:
+                FILE_MODEL_DICT[filename].import_from_json_str(filename_json_str_map[filename])
     return {'ok': True}

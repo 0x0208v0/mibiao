@@ -83,9 +83,10 @@ Linux系统；OSX系统
     root        7265  0.0  9.0  39232 23720 ?        S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
     root        7266  0.0 25.9 1133244 68040 ?       S    14:29   0:00 /opt/mibiao/.venv/bin/python3 /opt/mibiao/.venv/bin/gunicorn -c gunicorn.conf.py -b [::]:15000 -D mibiao.app:app
 
-## 【可选】保活（推荐：重启后，项目可以自动重启😎）
+## 【可选】配置 Supervisor 自启保活（推荐：服务器重启后，项目可以自动启动😎）
 
-[安装 Supervisor 并配置保活](./docs/supervisor_install.md)
+[Alpine 3.18 安装 Supervisor 并配置自启保活](./docs/alpine_install_supervisor.md)
+[Debian 12 安装 Supervisor 并配置自启保活](./docs/debian_install_supervisor.md)
 
 ## docker + docker-compose 方式安装项目
 

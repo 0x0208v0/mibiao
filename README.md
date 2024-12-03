@@ -85,7 +85,7 @@ Linux系统；OSX系统
 
 ## 【可选】配置 Supervisor 自启保活（推荐：服务器重启后，项目可以自动启动😎）
 
-[Alpine 3.18 安装 Supervisor 并配置自启保活](./docs/alpine_install_supervisor.md)
+[Alpine 3.18 安装 Supervisor 并配置自启保活](./docs/alpine_install_supervisor.md)  
 [Debian 12 安装 Supervisor 并配置自启保活](./docs/debian_install_supervisor.md)
 
 ## docker + docker-compose 方式安装项目

@@ -111,3 +111,7 @@ Linux系统；OSX系统
 [Supervisor Configuration File¶](http://supervisord.org/configuration.html)  
 [Differences between reread, reload, restart, update? #720](https://github.com/Supervisor/supervisor/issues/720)  
 [Supervisord: Restarting and Reloading](https://www.onurguzel.com/supervisord-restarting-and-reloading/)
+
+## Python技术交流群（微信）
+
+![4577a02a4861b900fa7f5e896eabe4d1.jpeg](https://ice.frostsky.com/2024/12/03/4577a02a4861b900fa7f5e896eabe4d1.jpeg)

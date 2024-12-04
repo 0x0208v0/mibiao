@@ -27,7 +27,7 @@
 {% endblock scripts %}
 
 {% block content %}
-  <div class="domain-list flex">
+  <div class="domain-list flex ml-[5px] mr-[5px]">
     <div class="flex-1">
       {% if not domain_list %}
         <div class="flex justify-center items-center h-full">
@@ -76,7 +76,7 @@
       {% endif %}
       <div class="h-[20px]"></div>
     </div>
-    <div class="ml-[20px] w-[200px]">
+    <div class="ml-[20px] w-[200px] hidden sm:block">
       <div class="flex">
         <div>
           <img class="avatar" src="{{ config.user_avatar_url }}" alt="avatar" width="40" height="40"/>

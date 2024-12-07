@@ -91,7 +91,6 @@ a:hover {
     border-radius: 1rem;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
     box-sizing: border-box;
-    padding: 25px 30px;
     transition: background-color 0.5s;
     margin: 15px 0 15px 0;
 }

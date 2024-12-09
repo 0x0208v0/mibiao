@@ -24,11 +24,8 @@ def index():
         return redirect(url_for('user.register'))
 
     domain_list = Domain.get_list(
-        Domain.is_hide.op('==')(False),
-        order_by=[
-            Domain.rank,
-            Domain.id.desc(),
-        ],
+        Domain.is_hide == False,
+        order_by=[Domain.is_hide, Domain.rank, Domain.created_at.desc(), Domain.id.desc()],
     )
     return render_template(
         'main/index.html.j2',
@@ -42,18 +39,14 @@ def tag_index(url_path_name: str):
         return redirect(url_for('user.register'))
 
     tag = Tag.get_one(Tag.url_path_name == url_path_name)
-    if tag:
-        domain_list = Domain.get_list(
-            DomainTag.domain_id == Domain.id,
-            DomainTag.tag_id == tag.id,
-            Domain.is_hide.op('==')(False),
-            order_by=[
-                Domain.rank,
-                Domain.id.desc(),
-            ],
-        )
-    else:
-        domain_list = []
+    if not tag or tag.is_hide:
+        return redirect(url_for('main.index'))
+    domain_list = Domain.get_list(
+        DomainTag.domain_id == Domain.id,
+        DomainTag.tag_id == tag.id,
+        Domain.is_hide == False,
+        order_by=[Domain.is_hide, Domain.rank, Domain.created_at.desc(), Domain.id.desc()],
+    )
     return render_template(
         'main/index.html.j2',
         domain_list=domain_list,

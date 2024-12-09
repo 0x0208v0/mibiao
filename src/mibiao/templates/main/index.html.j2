@@ -86,7 +86,11 @@
               </div>
               <div class="flex sm:absolute bottom-[8px] right-[13px]">
                 <div class="justify-end flex flex-1 ml-[30px]">
-                  {% for tag in domain.tags %}<a class="tag" href="{{ tag.tag_url }}">{{ tag.name }}</a>{% endfor %}
+                  {% for tag in domain.tags %}
+                    <a class="tag" href="{{ url_for('main.tag_index', url_path_name=tag.url_path_name) }}">
+                      {{ tag.name }}
+                    </a>
+                  {% endfor %}
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@
   <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com/3.4.16"></script>
     <script>
       tailwind.config = {
         theme: {
@@ -21,11 +21,11 @@
     {% block google_tag %}
     {% endblock google_tag %}
 
-    {#
-  图标:
-  https://www.svgrepo.com/
-  https://iconpark.oceanengine.com/official
-  #}
+    <!--
+      图标:
+      https://www.svgrepo.com/
+      https://iconpark.oceanengine.com/official
+    -->
     <link rel="icon"
           href="{%- block icon -%}{{ url_for('static', filename='favicon-32x32.png') }}{%- endblock icon -%}"/>
 
@@ -37,6 +37,36 @@
 
     {% block styles %}
       <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+
+      <style>
+          .mini-scroll-bar-style {
+              overscroll-behavior: contain;
+          }
+
+          .mini-scroll-bar-style::-webkit-scrollbar {
+              width: 2px;
+              height: 2px;
+          }
+
+          .mini-scroll-bar-style::-webkit-scrollbar-track {
+              background: transparent;
+          }
+
+          .mini-scroll-bar-style::-webkit-scrollbar-thumb {
+              border-radius: 4px;
+              background: #d0d0d0;
+          }
+
+          .mini-scroll-bar-style::-webkit-scrollbar-thumb:hover {
+              background: #9d9d9d;
+          }
+
+          @supports not selector(::-webkit-scrollbar) {
+              * {
+                  scrollbar-width: none;
+              }
+          }
+      </style>
     {% endblock styles %}
   </head>
 
@@ -44,28 +74,29 @@
   {% block body %}
 
     <header class="header">
-      <div class="navbar flex items-center justify-between w-full px-4 py-2 max-w-[888px]">
-        <div class="flex">
+      <nav class="navbar overflow-x-auto overflow-y-hidden mini-scroll-bar-style w-full px-4 py-2 max-w-[888px]">
+        <div class="flex flex-row">
           <a href="{{ url_for('main.index') }}" class="brand">
             <img class="debug logo" src="{{ config.site_icon_url }}" width="36" height="36" alt="logo"/>
             <span class="debug title">{{ config.site_brand }}</span>
             <span class="debug beta">{{ config.site_beta }}</span>
           </a>
-          <ul class="flex justify-center items-center ml-[15px]">
+          <ul class="flex justify-center items-center overflow-auto ml-[15px]">
             {% for tag in tag_list %}
               <li class="flex justify-center items-center ml-[8px] mr-[8px] text-[13px] text-[#555]">
-                <a class="m-0 p-0" href="{{ url_for('main.tag_index', url_path_name=tag.url_path_name) }}">
+                <a class="m-0 p-0 whitespace-nowrap"
+                   href="{{ url_for('main.tag_index', url_path_name=tag.url_path_name) }}">
                   {{ tag.name }}
                 </a>
               </li>
             {% endfor %}
           </ul>
         </div>
-      </div>
+      </nav>
     </header>
 
     <main class="flex flex-col items-center min-h-full">
-      <div class="w-full max-w-[850px] mt-[30px]">
+      <div class="h-full w-full sm:max-w-[850px] p-[5px] mt-[30px]">
         {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
             {% for category, message in messages %}
@@ -88,8 +119,8 @@
           {% endif %}
         {% endwith %}
 
-        {% block content %}
-        {% endblock content %}
+        {% block container %}
+        {% endblock container %}
 
       </div>
     </main>

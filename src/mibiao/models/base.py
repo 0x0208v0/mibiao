@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import uuid
 from datetime import datetime
-from json import JSONEncoder
 from typing import Self
 
 import pendulum
@@ -23,7 +22,7 @@ from sqlalchemy.orm import object_session
 from werkzeug.exceptions import NotFound
 
 
-class JsonEncoder(JSONEncoder):
+class JsonEncoder(json.JSONEncoder):
     def default(self, field):
         if isinstance(field, uuid.UUID):
             return str(field)
@@ -66,6 +65,34 @@ class SqlalchemyBaseModel(DeclarativeBase):
     def session(self) -> Session:
         return object_session(self)
 
+    @property
+    def column_names(self) -> list:
+        return [column.name for column in getattr(self, '__table__').columns]
+
+    def to_record(self) -> dict:
+        return {column_name: getattr(self, column_name, None) for column_name in self.column_names}
+
+    def to_dict(self) -> dict:
+        return self.to_record()
+
+    def to_record_json_str(self, decoder_cls: json.JSONEncoder | None = None) -> str:
+        return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
+
+    def to_dict_json_str(self, decoder_cls: json.JSONEncoder | None = None) -> str:
+        return json.dumps(self.to_dict(), cls=decoder_cls or JsonEncoder)
+
+    @classmethod
+    def get_obj_id(cls, obj_or_id: Self | str) -> str:
+        if isinstance(obj_or_id, str):
+            return obj_or_id
+        elif isinstance(obj_or_id, cls):
+            return obj_or_id.id
+        else:
+            obj_id = getattr(obj_or_id, 'id', None)
+            if obj_id is None:
+                raise ValueError(f'obj {obj_or_id} 没有ID')
+            return obj_id
+
     @classmethod
     def create_from_data(
             cls,
@@ -91,11 +118,7 @@ class SqlalchemyBaseModel(DeclarativeBase):
 
     def update_from_data(self, data: dict, commit: bool = True):
         for k, v in data.items():
-            if hasattr(self, k) and k not in {
-                'id',
-                'created_at',
-                'updated_at',
-            }:
+            if hasattr(self, k) and k not in {'id', 'created_at', 'updated_at'}:
                 setattr(self, k, v)
         db.session.add(self)
         db.session.flush([self])
@@ -103,7 +126,7 @@ class SqlalchemyBaseModel(DeclarativeBase):
             db.session.commit()
 
     def update(self, data: dict, commit: bool = True):
-        return self.create_from_data(data=data, commit=commit)
+        return self.update_from_data(data=data, commit=commit)
 
     def delete(self, commit: bool = True):
         db.session.delete(self)
@@ -123,25 +146,16 @@ class SqlalchemyBaseModel(DeclarativeBase):
         if commit:
             db.session.commit()
 
-    def to_record(self) -> dict:
-        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
-
-    def to_json(self, decoder_cls: JSONEncoder | None = None) -> str:
-        return json.dumps(self.to_record(), cls=decoder_cls or JsonEncoder)
-
-    def to_dict(self) -> dict:
-        return {column.name: getattr(self, column.name, None) for column in getattr(self, '__table__').columns}
-
     @classmethod
     def export_to_json_str(
             cls,
             ensure_ascii: bool = False,
             indent: int = 4,
-            decoder_cls: JSONEncoder | None = None,
+            decoder_cls: json.JSONEncoder | None = None,
     ) -> str:
         obj_list = []
         for obj in cls.get_list():
-            obj_list.append(json.loads(obj.to_json()))
+            obj_list.append(json.loads(obj.to_record_json_str()))
         return json.dumps(obj_list, ensure_ascii=ensure_ascii, indent=indent, cls=decoder_cls or JsonEncoder)
 
     @classmethod
@@ -157,18 +171,6 @@ class SqlalchemyBaseModel(DeclarativeBase):
             if 'created_at' in data:
                 data['created_at'] = datetime.fromisoformat(data['created_at'])
             cls.create_from_data(data)
-
-    @classmethod
-    def get_obj_id(cls, obj_or_id: Self | str) -> str:
-        if isinstance(obj_or_id, str):
-            return obj_or_id
-        elif isinstance(obj_or_id, cls):
-            return obj_or_id.id
-        else:
-            obj_id = getattr(obj_or_id, 'id', None)
-            if obj_id is None:
-                raise ValueError(f'obj {obj_or_id} 没有ID')
-            return obj_id
 
     @classmethod
     def get(cls, ident: str) -> Self | None:

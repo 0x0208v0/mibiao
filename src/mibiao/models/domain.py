@@ -97,24 +97,6 @@ class Domain(BaseModel):
         data['tags'] = Tag.get_list_by_ids(data.pop('tag_ids'))
         return super().update(data=data, commit=commit)
 
-    def update_tags(self, tag_ids: list[str], commit: bool = True):
-        tags = Tag.get_list_by_ids(tag_ids)
-        self.tags = tags
-        self.session.flush([self])
-        if commit:
-            self.session.commit()
-
-    def remove_tags(self, tag_ids: list[str], commit: bool = True):
-        self.session.execute(
-            delete(DomainTag).where(
-                DomainTag.domain_id == self.id,
-                DomainTag.tag_id.in_(tag_ids),
-            )
-        )
-        self.session.flush([self])
-        if commit:
-            self.session.commit()
-
     def to_dict(self) -> dict:
         return {
             'id': self.id,

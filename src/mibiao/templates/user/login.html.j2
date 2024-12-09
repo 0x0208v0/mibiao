@@ -1,5 +1,6 @@
 {% extends 'base.html.j2' %}
 
+
 {% block styles %}
   {{ super() }}
 
@@ -7,6 +8,7 @@
         integrity="sha512-jnSuA4Ss2PkkikSOLtYs8BlYIeeIK1h99ty4YfvRPAlzr377vr3CXDb7sb7eEEBYjDtcYj+AjBH3FLv5uSJuXg=="
         crossorigin="anonymous" referrerpolicy="no-referrer"/>
 {% endblock styles %}
+
 
 {% block scripts %}
   {{ super() }}
@@ -16,7 +18,8 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 {% endblock scripts %}
 
-{% block content %}
+
+{% block container %}
   <div>
     <h1>后台登陆</h1>
     <div class="mt-4">
@@ -48,4 +51,4 @@
       </form>
     </div>
   </div>
-{% endblock %}
+{% endblock container %}

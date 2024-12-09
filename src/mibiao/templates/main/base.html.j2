@@ -1,0 +1,49 @@
+{% extends "base.html.j2" %}
+
+{% block styles %}
+  {{ super() }}
+
+  <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.css"
+        integrity="sha512-vRbASHFS0JiM4xwX/iqr9mrD/pXGnOP2CLdmXSSNAjLdgQVFyt4qI+BIoUW7/81uSuKRj0cWv3Dov8vVQOTHLw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <style>
+      .container {
+          background-color: #fff;
+          border-radius: 1rem;
+          box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
+          box-sizing: border-box;
+          transition: background-color 0.5s;
+          margin: 15px 0 15px 0;
+          min-height: 256px;
+      }
+  </style>
+{% endblock styles %}
+
+{% block scripts %}
+  {{ super() }}
+
+  <script src="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.js"
+          integrity="sha512-lZD0JiwhtP4UkFD1mc96NiTZ14L7MjyX5Khk8PMxJszXMLvu7kjq1sp4bb0tcL6MY+/4sIuiUxubOqoueHrW4w=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script>
+    for (const img of document.getElementsByTagName('img')) {
+      if (img.alt === 'icon') {
+        continue;
+      }
+      const viewer = new Viewer(img, {
+        inline: false,
+        viewed() {
+          viewer.zoomTo(1);
+        },
+      });
+    }
+  </script>
+{% endblock scripts %}
+
+{% block container %}
+  <div class="container flex flex-col sm:flex-row px-[3px] sm:px-[30px] py-[20px] sm:py-[25px] mx-auto">
+    {% block content %}
+    {% endblock content %}
+  </div>
+{% endblock container %}

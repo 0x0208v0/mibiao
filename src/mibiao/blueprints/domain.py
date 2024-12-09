@@ -17,7 +17,7 @@ blueprint = Blueprint('domain', __name__)
 @login_required
 def get_domain_list():
     domain_list = Domain.get_list(
-        order_by=[Domain.is_hide, Domain.rank, Domain.id.desc()],
+        order_by=[Domain.is_hide, Domain.rank, Domain.created_at.desc(), Domain.id.desc()],
     )
     return {'domain_list': [domain.to_dict() for domain in domain_list]}
 

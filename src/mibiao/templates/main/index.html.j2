@@ -1,59 +1,78 @@
-{% extends "base.html.j2" %}
+{% extends "main/base.html.j2" %}
 
 {% block styles %}
   {{ super() }}
-  <link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.css"
-        integrity="sha512-vRbASHFS0JiM4xwX/iqr9mrD/pXGnOP2CLdmXSSNAjLdgQVFyt4qI+BIoUW7/81uSuKRj0cWv3Dov8vVQOTHLw=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"/>
+
+  <style>
+      .tag {
+          min-width: 31px;
+          font-size: 11px;
+          text-decoration: none;
+          background: #fbfbfb;
+          border: none;
+          border-radius: 2px;
+          bottom: 8px;
+          box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+          color: unset;
+          height: 20px;
+          line-height: 20px;
+          padding: 0 4px;
+          margin-left: 5px;
+          word-break: keep-all;
+      }
+
+      .domain-list-item {
+          border-bottom: 1px solid #dee2e6;
+          padding: 8px 16px;
+          min-height: 58px;
+      }
+
+      .avatar {
+          border-radius: 15%;
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+          height: 40px;
+          width: 40px;
+      }
+
+      .description {
+          background-color: #ffffda;
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+          border-radius: 5px;
+          padding: 10px;
+          color: #333;
+          margin: 1rem 0;
+      }
+
+  </style>
 {% endblock styles %}
 
-{% block scripts %}
-  {{ super() }}
-
-  <script src="https://s4.zstatic.net/ajax/libs/viewerjs/1.11.7/viewer.min.js"
-          integrity="sha512-lZD0JiwhtP4UkFD1mc96NiTZ14L7MjyX5Khk8PMxJszXMLvu7kjq1sp4bb0tcL6MY+/4sIuiUxubOqoueHrW4w=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-  <script>
-    for (const avatar of document.getElementsByClassName('avatar')) {
-      const viewer = new Viewer(avatar, {
-        inline: false,
-        viewed() {
-          viewer.zoomTo(1);
-        },
-      });
-    }
-  </script>
-{% endblock scripts %}
-
 {% block content %}
-  <div class="domain-list flex">
-    <div class="flex-1">
-      {% if not domain_list %}
-        <div class="flex justify-center items-center h-full">
-          <div class="text-center text-[14px] text-[#787878]">暂无数据</div>
-        </div>
-      {% else %}
-        <ul class="flex flex-col p-0">
-          {% for domain in domain_list %}
-            <li class="domain-list-item text-pretty relative flex">
-              <div class="mr-[10px] min-w-[40px] min-h-[40px]">
-                {% if domain.logo_url %}
-                  <img class="avatar" src="{{ domain.logo_url }}" alt="{{ domain.name }}" width="40" height="40"/>
-                {% else %}
-                  <div class="avatar"></div>
-                {% endif %}
+  <!-- 域名列表 -->
+  <div class="flex-1">
+    {% if not domain_list %}
+      <div class="flex justify-center items-center h-full">
+        <div class="text-center text-[14px] text-[#787878]">暂无数据</div>
+      </div>
+    {% else %}
+      <ul class="flex flex-col p-0">
+        {% for domain in domain_list %}
+          <li class="domain-list-item text-pretty relative flex">
+            <div class="mr-[10px] min-w-[40px] min-h-[40px]">
+              {% if domain.logo_url %}
+                <img class="avatar" src="{{ domain.logo_url }}" alt="{{ domain.name }}" width="40" height="40"/>
+              {% else %}
+                <div class="avatar"></div>
+              {% endif %}
+            </div>
+            <div class="w-full">
+              <div class="text-[14px] font-[700] text-[#555]">
+                <a href="#">{{ domain.name }}</a>
               </div>
-              <div>
-                <div class="text-[14px] font-[700] text-[#555]">
-                  <a href="{{ domain.url }}">{{ domain.name }}</a>
-                </div>
-                <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
-                  <p>
-                    {% if domain.description %}
-                      {{ domain.description | markdown_to_html | safe }}
-                    {% endif %}
-                  </p>
+              <div class="text-[12px] text-[#787878] border-gray-300 mb-[8px]">
+                <p>
+                  {% if domain.description %}
+                    {{ domain.description | markdown_to_html | safe }}
+                  {% endif %}
                   {% if domain.selling_price %}
                     <span class="mr-1">售价：{{ domain.selling_price }}</span>
                   {% endif %}
@@ -63,42 +82,47 @@
                   {% if domain.transaction_method %}
                     <span class="mr-1">交易方式：{{ domain.transaction_method }}</span>
                   {% endif %}
-                </div>
-                <div class="flex absolute absolute bottom-[8px] right-[13px]">
-                  <div class="justify-end flex flex-1 ml-[30px]">
-                    {% for tag in domain.tags %}<a class="tag" href="{{ tag.tag_url }}">{{ tag.name }}</a>{% endfor %}
-                  </div>
+                </p>
+              </div>
+              <div class="flex sm:absolute bottom-[8px] right-[13px]">
+                <div class="justify-end flex flex-1 ml-[30px]">
+                  {% for tag in domain.tags %}
+                    <a class="tag" href="{{ url_for('main.tag_index', url_path_name=tag.url_path_name) }}">
+                      {{ tag.name }}
+                    </a>
+                  {% endfor %}
                 </div>
               </div>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      <div class="h-[20px]"></div>
-    </div>
-    <div class="ml-[20px] w-[200px]">
-      <div class="flex">
-        <div>
-          <img class="avatar" src="{{ config.user_avatar_url }}" alt="avatar" width="40" height="40"/>
-        </div>
-        <div class="flex flex-col ml-[16px]">
-          <div class="text-[16px] text-[#555]">{{ config.user_name }}</div>
-          <div class="flex">
-            <div>
-              <a href="{{ url_for('admin.index') }}">
-                <img src="{{ url_for('static', filename='setting-two.svg') }}" width="16" height="16" alt="icon"/>
-              </a>
             </div>
-            <div class="ml-[6px]">
-              <a href="{{ url_for('user.logout') }}">
-                <img src="{{ url_for('static', filename='logout.svg') }}" width="16" height="16" alt="icon"/>
-              </a>
-            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    <div class="h-[20px]"></div>
+  </div>
+  <!-- 个人信息 -->
+  <div class="sm:ml-[20px] sm:w-[220px]">
+    <div class="flex">
+      <div>
+        <img class="avatar" src="{{ config.user_avatar_url }}" alt="avatar" width="40" height="40"/>
+      </div>
+      <div class="flex flex-col ml-[16px]">
+        <div class="text-[16px] text-[#555]">{{ config.user_name }}</div>
+        <div class="flex">
+          <div>
+            <a href="{{ url_for('admin.index') }}">
+              <img src="{{ url_for('static', filename='setting-two.svg') }}" width="16" height="16" alt="icon"/>
+            </a>
+          </div>
+          <div class="ml-[6px]">
+            <a href="{{ url_for('user.logout') }}">
+              <img src="{{ url_for('static', filename='logout.svg') }}" width="16" height="16" alt="icon"/>
+            </a>
           </div>
         </div>
       </div>
-
-      <div class="description">{{ config.user_comment | markdown_to_html | safe }}</div>
     </div>
+
+    <div class="description">{{ config.user_comment | markdown_to_html | safe }}</div>
   </div>
 {% endblock content %}

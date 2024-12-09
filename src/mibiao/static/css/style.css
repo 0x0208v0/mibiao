@@ -69,53 +69,6 @@ a:hover {
     top: -12px;
 }
 
-.tag {
-    min-width: 31px;
-    font-size: 11px;
-    text-decoration: none;
-    background: #fbfbfb;
-    border: none;
-    border-radius: 2px;
-    bottom: 8px;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-    color: unset;
-    height: 20px;
-    line-height: 20px;
-    padding: 0 4px;
-    margin-left: 5px;
-    word-break: keep-all;
-}
-
-.domain-list {
-    background-color: #fff;
-    border-radius: 1rem;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.24);
-    box-sizing: border-box;
-    transition: background-color 0.5s;
-    margin: 15px 0 15px 0;
-}
-
-.domain-list-item {
-    border-bottom: 1px solid #dee2e6;
-    padding: 8px 16px;
-    min-height: 58px;
-}
-
-.avatar {
-    border-radius: 15%;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
-    height: 40px;
-    width: 40px;
-}
-
-.description {
-    background-color: #ffffda;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
-    border-radius: 5px;
-    padding: 10px;
-    color: #333;
-    margin: 1rem 0;
-}
 
 .copyright {
     text-align: center;

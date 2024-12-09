@@ -1,4 +1,4 @@
-FROM python:3.12-slim-bookworm as python3
+FROM python:3.12-slim-bookworm AS python3
 WORKDIR /opt/mibiao
 COPY ./src /opt/mibiao/src
 COPY ./pyproject.toml /opt/mibiao/pyproject.toml
